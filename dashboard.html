@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic AI in ISC Haifa - Live Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:          #0D1117;
+      --ink-2:        #161B22;
+      --ink-3:        #21262D;
+      --surface:      #FFFFFF;
+      --surface-2:    #F6F8FA;
+      --surface-3:    #EAEEF2;
+      --text-1:       #1A2332;
+      --text-2:       #4B5563;
+      --text-3:       #8B949E;
+      --border:       #D1D9E0;
+      --border-2:     #E8ECF0;
+      --blue:         #0969DA;
+      --blue-bg:      #EBF5FF;
+      --blue-border:  #BAD9FB;
+      --blue-text:    #0550AE;
+      --amber:        #9A6700;
+      --amber-bg:     #FFF8C5;
+      --amber-border: #F5C518;
+      --amber-text:   #7D4E00;
+      --red:          #CF222E;
+      --red-bg:       #FFF0EE;
+      --red-border:   #FFB8B0;
+      --red-text:     #A40E26;
+      --green:        #1A7F37;
+      --green-bg:     #DAFBE1;
+      --green-border: #4AC26B;
+      --green-text:   #116329;
+      --purple:       #6E40C9;
+      --purple-bg:    #F5F0FF;
+      --purple-border:#D8B9FF;
+      --purple-text:  #5A32A3;
+      --radius-sm:    4px;
+      --radius:       8px;
+      --radius-lg:    12px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--surface-2);
+      color: var(--text-1);
+      font-size: 13px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1520px;
+      margin: 0 auto;
+      background: var(--surface);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      padding: 32px 48px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 100% 50%, rgba(9,105,218,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .hero-tag {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+    .hero-tag.live {
+      color: #3FB950;
+      border-color: rgba(63,185,80,0.3);
+      background: rgba(63,185,80,0.08);
+    }
+    .hero-tag.live::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #3FB950;
+      margin-right: 5px;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .hero h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .hero-desc {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 820px;
+    }
+    .hero-desc-en,
+    .hero-desc-he {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.55);
+    }
+    .hero-desc-en {
+      border-left: 2px solid rgba(255,255,255,0.1);
+      padding-left: 12px;
+    }
+    .hero-desc-he {
+      direction: rtl;
+      text-align: right;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      border-right: 2px solid rgba(255,255,255,0.1);
+      padding-right: 12px;
+    }
+    .hero-desc strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+
+    .hero-right { flex-shrink: 0; }
+    .hero-stats {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      text-align: center;
+      min-width: 72px;
+    }
+    .hero-stat .n {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+    .hero-stat .l {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hero-links {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+    .hero-link {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 4px 11px;
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+    .hero-link:hover { color: #FFFFFF; background: rgba(255,255,255,0.1); }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-2);
+      padding: 10px 48px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+    }
+    .tl-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .tl-item.done { background: var(--blue-bg); color: var(--blue-text); }
+    .tl-item.pause { background: var(--amber-bg); color: var(--amber-text); }
+    .tl-item.next { background: var(--green-bg); color: var(--green-text); }
+    .tl-item.pending { background: var(--surface-2); color: var(--text-3); border: 1px dashed var(--border); }
+    .tl-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .tl-dot.blue { background: var(--blue); }
+    .tl-dot.purple { background: var(--purple); }
+    .tl-dot.amber { background: var(--amber); }
+    .tl-dot.green { background: var(--green); }
+    .tl-dot.gray { background: var(--border); }
+    .tl-sep { color: var(--border); font-size: 12px; padding: 0 4px; flex-shrink: 0; }
+
+    /* ── CHAMPIONS STRIP ── */
+    .champ-strip {
+      background: var(--green-bg);
+      border-bottom: 1px solid var(--green-border);
+      padding: 12px 48px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .champ-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--green-text);
+      background: white;
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-sm);
+      padding: 3px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .champ-phases {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .champ-phase {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--green-text);
+    }
+    .champ-phase-num {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--green);
+      background: white;
+      border: 1px solid var(--green-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+    .champ-phase strong { font-weight: 700; color: #0D5C2F; }
+    .champ-arrow { color: var(--green-border); font-size: 13px; }
+    .champ-he {
+      direction: rtl;
+      text-align: right;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 11px;
+      color: var(--green-text);
+      opacity: 0.65;
+      flex-shrink: 0;
+      max-width: 260px;
+      line-height: 1.4;
+    }
+
+    /* ── BODY ── */
+    .body { padding: 20px 48px 32px; }
+
+    /* ── SECTION HEADER ── */
+    .sec-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-top: 24px;
+      margin-bottom: 10px;
+    }
+    .sec-head:first-child { margin-top: 0; }
+    .sec-tag {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: var(--radius-sm);
+      padding: 2px 7px;
+      flex-shrink: 0;
+    }
+    .sec-tag.s1  { background: var(--blue-bg); color: var(--blue-text); border: 1px solid var(--blue-border); }
+    .sec-tag.s2  { background: var(--purple-bg); color: var(--purple-text); border: 1px solid var(--purple-border); }
+    .sec-tag.sec { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
+    .sec-tag.rai { background: var(--purple-bg); color: var(--purple-text); border: 1px solid var(--purple-border); }
+    .sec-title { font-size: 13px; font-weight: 600; color: var(--text-1); }
+    .sec-date {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      color: var(--text-3);
+      margin-left: auto;
+    }
+
+    /* ── CARD GRID ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .card-grid.g3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid.g2 { grid-template-columns: repeat(2, 1fr); }
+
+    /* ── TOPIC CARD ── */
+    .tc {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .tc:hover { border-color: var(--text-3); }
+    .tc.blue   { border-top: 2px solid var(--blue); }
+    .tc.purple { border-top: 2px solid var(--purple); }
+    .tc.amber  { border-top: 2px solid #D4A017; }
+    .tc.red    { border-top: 2px solid var(--red); }
+    .tc.green  { border-top: 2px solid var(--green); }
+
+    /* collapsed head */
+    .tc-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tc-head:hover { background: var(--surface-2); }
+
+    .tc-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 5px;
+      flex-shrink: 0;
+      min-width: 120px;
+      max-width: 140px;
+    }
+
+    .tc-chips {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .chip {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      border-radius: 3px;
+      padding: 2px 6px;
+      white-space: nowrap;
+      border: 1px solid transparent;
+      line-height: 1.4;
+    }
+    .chip.neutral { background: var(--surface-2); color: var(--text-2); border-color: var(--border-2); }
+    .chip.warn    { background: var(--amber-bg); color: var(--amber-text); border-color: rgba(212,160,23,0.3); }
+    .chip.danger  { background: var(--red-bg); color: var(--red-text); border-color: rgba(207,34,46,0.2); }
+    .chip.ok      { background: var(--green-bg); color: var(--green-text); border-color: rgba(26,127,55,0.2); }
+
+    .tc-toggle {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--blue);
+      background: var(--blue-bg);
+      border: 1px solid var(--blue-border);
+      border-radius: 3px;
+      padding: 2px 7px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-left: auto;
+      align-self: center;
+      transition: background 0.12s;
+    }
+    .tc-head:hover .tc-toggle { background: var(--blue-border); }
+    .tc.open .tc-toggle { background: var(--blue-border); }
+
+    /* expanded detail */
+    .tc-body {
+      display: none;
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--border-2);
+      background: var(--surface-2);
+    }
+    .tc.open .tc-body {
+      display: block;
+      animation: slideDown 0.15s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* detail internals */
+    .d-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .d-grid.g1 { grid-template-columns: 1fr; }
+    .d-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .d-col { display: flex; flex-direction: column; gap: 5px; }
+
+    .d-section-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2px;
+    }
+
+    .d-row {
+      font-size: 11.5px;
+      color: var(--text-2);
+      padding: 3px 0 3px 12px;
+      position: relative;
+      line-height: 1.4;
+      border-radius: var(--radius-sm);
+    }
+    .d-row::before {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 9px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+    .d-row.warn {
+      background: var(--amber-bg);
+      border: 1px solid rgba(212,160,23,0.25);
+      padding: 4px 8px 4px 20px;
+      font-weight: 600;
+      color: var(--amber-text);
+    }
+    .d-row.warn::before { background: #D4A017; left: 7px; top: 10px; }
+    .d-row.danger {
+      background: var(--red-bg);
+      border: 1px solid rgba(207,34,46,0.2);
+      padding: 4px 8px 4px 20px;
+      font-weight: 600;
+      color: var(--red-text);
+    }
+    .d-row.danger::before { background: var(--red); left: 7px; top: 10px; }
+    .d-row.ok {
+      color: var(--green-text);
+    }
+    .d-row.ok::before { background: var(--green); }
+
+    .d-heb {
+      direction: rtl;
+      text-align: right;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 10px;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 20px 1fr auto;
+      gap: 6px;
+      align-items: start;
+      padding: 5px 8px;
+      background: var(--green-bg);
+      border: 1px solid rgba(26,127,55,0.2);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--green-text);
+      line-height: 1.35;
+    }
+    .a-num {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--green);
+      background: white;
+      border: 1px solid var(--green-border);
+      border-radius: 3px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .a-owner {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      color: var(--green);
+      opacity: 0.65;
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    .risk-block {
+      background: var(--amber-bg);
+      border: 1px solid rgba(212,160,23,0.3);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+    }
+    .risk-block strong {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--amber-text);
+      margin-bottom: 2px;
+    }
+    .risk-block p { font-size: 11px; color: var(--amber-text); line-height: 1.4; }
+    .risk-block .heb {
+      display: block;
+      direction: rtl;
+      text-align: right;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 10px;
+      color: var(--amber-text);
+      opacity: 0.7;
+      margin-top: 3px;
+    }
+
+    .rule-block {
+      background: var(--blue-bg);
+      border: 1px solid var(--blue-border);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 11.5px;
+      color: var(--blue-text);
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .contact-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+    }
+    .contact-card .cn { font-size: 11.5px; font-weight: 600; color: var(--text-1); }
+    .contact-card .ce { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--text-2); margin-top: 1px; }
+    .contact-card .cd { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+
+    .name-tag {
+      background: var(--red-bg);
+      border: 1px solid rgba(207,34,46,0.2);
+      border-radius: var(--radius-sm);
+      padding: 5px 9px;
+      font-size: 11.5px;
+      color: var(--text-1);
+      font-weight: 500;
+    }
+    .name-tag-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+    }
+
+    .tool-tile {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+    }
+    .tool-tile .tt { font-size: 12px; font-weight: 700; color: var(--text-1); margin-bottom: 2px; }
+    .tool-tile .ts { font-size: 10.5px; color: var(--text-2); line-height: 1.4; }
+
+    /* ── EXEC BOX ── */
+    .exec-box {
+      background: var(--ink);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      color: white;
+      margin: 12px 0 4px;
+    }
+    .exec-box-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 10px;
+    }
+    .exec-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .exec-item {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .exec-n {
+      font-family: 'Geist Mono', monospace;
+      font-size: 18px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.25);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .exec-t { font-size: 11px; color: rgba(255,255,255,0.8); line-height: 1.3; }
+    .exec-h {
+      direction: rtl;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 9.5px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 3px;
+    }
+    .exec-footer {
+      direction: rtl;
+      text-align: center;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+      padding: 10px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .footer-left {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      color: var(--text-3);
+    }
+    .footer-right { display: flex; gap: 6px; align-items: center; }
+    .f-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      padding: 3px 8px;
+      text-decoration: none;
+      border: 1px solid transparent;
+    }
+    .f-tag.s1 { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
+    .f-tag.s2 { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
+    .f-tag.neutral { background: var(--surface-3); color: var(--text-2); border-color: var(--border); }
+
+    @media print {
+      .tc-body { display: block !important; }
+      .tc-toggle { display: none; }
+      @page { margin: 8mm; size: A3 landscape; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-meta">
+          <span class="hero-tag">Philips ISC Haifa</span>
+          <span class="hero-tag live">Live</span>
+          <span class="hero-tag">CT Agentic AI Core Team</span>
+        </div>
+        <h1>Agentic AI in ISC Haifa</h1>
+        <div class="hero-desc">
+          <div class="hero-desc-en">
+            <strong>What is this?</strong> A cross-functional initiative to adopt AI responsibly across Haifa ISC operations. The CT Core Team (led by Matthijs Groeneveld) meets weekly to align on <strong>high-value use cases</strong>, governance, and support structures. This dashboard tracks decisions, action items, and progress across sessions.
+            <br><br>
+            <strong>Where we are:</strong> 2 sessions completed (Jul 9 and 16). Resuming <strong>August</strong> with the <strong>Haifa AI Champions</strong> initiative.
+          </div>
+          <div class="hero-desc-he">
+            <strong>מה זה?</strong> יוזמה משותפת לאימוץ AI אחראי ברחבי ISC חיפה. צוות הליבה של CT (בהובלת Matthijs Groeneveld) נפגש שבועית. הדשבורד עוקב אחרי החלטות, פעולות והתקדמות.
+            <br><br>
+            <strong>איפה אנחנו:</strong> 2 סשנים הושלמו (9 ו-16 ביולי). חוזרים <strong>באוגוסט</strong> עם יוזמת <strong>AI Champions חיפה</strong>.
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="n">2</div><div class="l">Sessions</div></div>
+          <div class="hero-stat"><div class="n">13</div><div class="l">Actions</div></div>
+          <div class="hero-stat"><div class="n">6</div><div class="l">Use Cases</div></div>
+        </div>
+        <div class="hero-links">
+          <a class="hero-link" href="https://share.philips.com/sites/Intranet_GlobalAIhub" target="_blank">Global AI Hub</a>
+          <a class="hero-link" href="https://share.philips.com/sites/HaifaOPSAI" target="_blank">SharePoint</a>
+          <a class="hero-link" href="https://docs.philips.com/:fl:/r/personal/roee_lahav_philips_com/Documents/Meetings/2nd%20session%20-%2016-JUL-2026.loop?d=wb135df1b37bc48039812193bde06cccc&csf=1&web=1&e=EYqkpw" target="_blank">S2 Loop Notes</a>
+          <a class="hero-link" href="https://roeelahavphilips.github.io/philips-haifa-ops-ai-strategy/" target="_blank">🇮🇱 AI Strategy Guide</a>
+          <a class="hero-link" href="https://theagenticawakening.com/the-agentic-awakening.pdf" target="_blank">Agentic Awakening PDF</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    <div class="tl-item done"><div class="tl-dot blue"></div>Session 1 - 9 Jul</div>
+    <div class="tl-sep">&#8250;</div>
+    <div class="tl-item done"><div class="tl-dot purple"></div>Session 2 - 16 Jul</div>
+    <div class="tl-sep">&#8250;</div>
+    <div class="tl-item pause"><div class="tl-dot amber"></div>Break 17-31 Jul</div>
+    <div class="tl-sep">&#8250;</div>
+    <div class="tl-item next"><div class="tl-dot green"></div>AI Champions - August</div>
+    <div class="tl-sep">&#8250;</div>
+    <div class="tl-item pending"><div class="tl-dot gray"></div>Session 3 - TBD</div>
+  </div>
+
+  <!-- CHAMPIONS STRIP -->
+  <div class="champ-strip">
+    <span class="champ-label">AI Champions Haifa - August</span>
+    <div class="champ-phases">
+      <div class="champ-phase"><span class="champ-phase-num">1</span><strong>Knowledge Baseline</strong> - common understanding across all teams</div>
+      <div class="champ-arrow">&#8250;</div>
+      <div class="champ-phase"><span class="champ-phase-num">2</span><strong>Look Forward</strong> - identify and prioritize use cases</div>
+      <div class="champ-arrow">&#8250;</div>
+      <div class="champ-phase"><span class="champ-phase-num">3</span><strong>Execute</strong> - pilot 1-3 high-impact projects</div>
+    </div>
+    <div class="champ-he">שלב 1: בסיס ידע משותף - שלב 2: מבט קדימה - שלב 3: פיילוט 1-3 פרויקטים</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- SESSION 1 -->
+    <div class="sec-head">
+      <span class="sec-tag s1">Session 1</span>
+      <span class="sec-title">9 Jul 2026 - Foundation: Objective, Approach, Principles</span>
+      <span class="sec-date">9 Jul 2026</span>
+    </div>
+
+    <div class="card-grid">
+
+      <div class="tc blue">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Objective</div>
+            <div class="tc-chips">
+              <span class="chip neutral">High-value use cases</span>
+              <span class="chip neutral">Measurable ROI</span>
+              <span class="chip neutral">Cross-functional</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row">Focus on high-value AI use cases<div class="d-heb">מיקוד בתרחישי AI בעלי ערך גבוה</div></div>
+            <div class="d-row">Drive measurable ROI<div class="d-heb">מדידת החזר השקעה</div></div>
+            <div class="d-row">Enable cross-functional collaboration<div class="d-heb">שיתוף פעולה בין פונקציות</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc blue">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Operating Approach</div>
+            <div class="tc-chips">
+              <span class="chip warn">Start small, scale</span>
+              <span class="chip neutral">Agile execution</span>
+              <span class="chip neutral">Business impact first</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row warn">Start small - scale proven solutions<div class="d-heb">להתחיל בקטן, להרחיב מה שעובד</div></div>
+            <div class="d-row">Structured but agile execution<div class="d-heb">ביצוע מובנה אך גמיש</div></div>
+            <div class="d-row">Business impact over experimentation<div class="d-heb">השפעה עסקית לפני ניסויים</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc blue">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Key Principles</div>
+            <div class="tc-chips">
+              <span class="chip neutral">Break silos</span>
+              <span class="chip warn">Microsoft-first</span>
+              <span class="chip warn">Early IT involvement</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row">Break silos - share best practices<div class="d-heb">לשבור סילואים, לשתף ידע</div></div>
+            <div class="d-row warn">Microsoft-first strategy<div class="d-heb">מיקרוסופט כברירת מחדל</div></div>
+            <div class="d-row warn">Early IT involvement<div class="d-heb">IT מעורב מיום ראשון</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc blue">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Use Cases (6 areas)</div>
+            <div class="tc-chips">
+              <span class="chip neutral">Regulatory</span>
+              <span class="chip neutral">Literature</span>
+              <span class="chip neutral">Quality</span>
+              <span class="chip neutral">+3 more</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-grid">
+            <div class="d-col">
+              <div class="d-row">Regulatory Submissions<div class="d-heb">הגשות רגולטוריות</div></div>
+              <div class="d-row">Literature Reviews<div class="d-heb">סקירות ספרות</div></div>
+              <div class="d-row">Marketing Content<div class="d-heb">תוכן שיווקי</div></div>
+            </div>
+            <div class="d-col">
+              <div class="d-row">Win/Loss and Competitive<div class="d-heb">ניתוח תחרותי</div></div>
+              <div class="d-row">Product Configuration<div class="d-heb">קונפיגורציה</div></div>
+              <div class="d-row">Quality and Reliability<div class="d-heb">איכות ואמינות</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-grid g3">
+
+      <div class="tc blue">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Governance and Execution</div>
+            <div class="tc-chips">
+              <span class="chip neutral">Weekly Thu cadence</span>
+              <span class="chip warn">Each function proposes</span>
+              <span class="chip neutral">Central risk log</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row">Central log for risks and actions<div class="d-heb">לוג מרכזי</div></div>
+            <div class="d-row">Weekly cadence (Thursdays)<div class="d-heb">מפגש שבועי</div></div>
+            <div class="d-row warn">Each function proposes use cases<div class="d-heb">כל פונקציה מציעה תרחישים</div></div>
+            <div class="d-row warn">Haifa AI Champions - August<div class="d-heb">סשן Champions באוגוסט</div></div>
+            <div class="d-row">Scalability from day one<div class="d-heb">סקיילביליטי מיום ראשון</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc amber">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Risks flagged by Roee</div>
+            <div class="tc-chips">
+              <span class="chip danger">Shadow AI</span>
+              <span class="chip danger">Token costs</span>
+              <span class="chip danger">Adoption gap</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col" style="gap:6px;">
+            <div class="risk-block"><strong>Limited AI tool visibility</strong><p>No inventory - duplication and Shadow AI risk</p><span class="heb">אין מיפוי מרכזי - סיכון Shadow AI</span></div>
+            <div class="risk-block"><strong>Adoption needs hands-on support</strong><p>Training alone will not drive adoption</p><span class="heb">הדרכה לבד לא מספיקה</span></div>
+            <div class="risk-block"><strong>Token costs scale fast</strong><p>Without governance, costs explode</p><span class="heb">בלי בקרה, העלויות מתפוצצות</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc blue">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">External Intelligence</div>
+            <div class="tc-chips">
+              <span class="chip neutral">Start Small - Deloitte/DHL</span>
+              <span class="chip danger">Shadow AI = 20% breaches</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row"><strong>"Start Small"</strong> = industry consensus (Deloitte, DHL)<div class="d-heb">הקונצנזוס: להתחיל בקטן</div></div>
+            <div class="d-row"><strong>No vendor lock-in</strong> - swappable models (Marsh McLennan)<div class="d-heb">אף אחד לא נועל על ספק אחד</div></div>
+            <div class="d-row"><strong>MS: hands-on adoption</strong> - office hours and Prompt-a-thons<div class="d-heb">מיקרוסופט: ליווי מעשי</div></div>
+            <div class="d-row danger"><strong>Shadow AI = 20% of breaches</strong> (IBM 2025)<div class="d-heb">כלים לא מאושרים = 20% מהפריצות</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SESSION 2 -->
+    <div class="sec-head">
+      <span class="sec-tag s2">Session 2</span>
+      <span class="sec-title">16 Jul 2026 - Training, Governance, Support and Costs</span>
+      <span class="sec-date">16 Jul 2026</span>
+    </div>
+
+    <div class="card-grid">
+
+      <div class="tc purple">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">AI Training and Adoption</div>
+            <div class="tc-chips">
+              <span class="chip danger">No learning path</span>
+              <span class="chip neutral">Resources hard to find</span>
+              <span class="chip neutral">Role-specific needed</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row danger">No clear AI learning path<div class="d-heb">אין מסלול למידה ברור</div></div>
+            <div class="d-row">Resources exist but hard to find<div class="d-heb">משאבים קיימים אבל קשה למצוא</div></div>
+            <div class="d-row">Need basic onboarding and role-specific<div class="d-heb">הכשרה בסיסית + מותאמת תפקיד</div></div>
+            <div class="d-row">Easier tool discovery<div class="d-heb">גילוי כלים קל יותר</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc purple">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">AI Hub Usability</div>
+            <div class="tc-chips">
+              <span class="chip danger">Hard to navigate</span>
+              <span class="chip neutral">Kairos unknown</span>
+              <span class="chip neutral">Need guided UX</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row danger">Hard to find answers in AI Hub<div class="d-heb">קשה למצוא תשובות</div></div>
+            <div class="d-row">Unaware of tools (e.g., Kairos)<div class="d-heb">לא מכירים כלים כמו Kairos</div></div>
+            <div class="d-row">Need guided navigation, not more docs<div class="d-heb">ניווט מודרך, לא עוד מסמכים</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc purple">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Approved Tools and IP</div>
+            <div class="tc-chips">
+              <span class="chip warn">Which tools approved?</span>
+              <span class="chip warn">What IP is safe?</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row warn">Which tools are approved?<div class="d-heb">אילו כלים מאושרים?</div></div>
+            <div class="d-row warn">What Philips data/IP can be used?<div class="d-heb">מה מותר להכניס?</div></div>
+            <div class="d-row">Basic vs. advanced tools distinction<div class="d-heb">הבדלה: בסיסיים vs מתקדמים</div></div>
+            <div class="d-row">Info exists but hard to locate<div class="d-heb">המידע קיים אבל לא נגיש</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc purple">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Support and Costs</div>
+            <div class="tc-chips">
+              <span class="chip neutral">Single entry point</span>
+              <span class="chip danger">Token costs explode</span>
+              <span class="chip warn">Model selection</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row">Single entry point for AI guidance<div class="d-heb">נקודת כניסה אחת</div></div>
+            <div class="d-row">AI Champions and local support<div class="d-heb">Champions + תמיכה מקומית</div></div>
+            <div class="d-row danger">Token costs scale with advanced tools<div class="d-heb">עלויות טוקנים מתפוצצות</div></div>
+            <div class="d-row warn">Educate on model selection<div class="d-heb">לחנך לבחירת מודל נכון</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-grid g3">
+
+      <div class="tc amber">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Raised by Roee (S2)</div>
+            <div class="tc-chips">
+              <span class="chip warn">AI Gateway</span>
+              <span class="chip warn">IP protection</span>
+              <span class="chip warn">Cost efficiency</span>
+              <span class="chip warn">Knowledge baseline</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col" style="gap:6px;">
+            <div class="risk-block"><strong>AI Assistant / Gateway</strong><p>Single place for AI questions</p><span class="heb">נקודה אחת לשאלות AI</span></div>
+            <div class="risk-block"><strong>IP and Data Protection</strong><p>What is safe to use in AI?</p><span class="heb">מה מותר להשתמש מ-IP?</span></div>
+            <div class="risk-block"><strong>Cost Efficiency</strong><p>Right model, not most expensive</p><span class="heb">מודל מתאים, לא הכי יקר</span></div>
+            <div class="risk-block"><strong>Baseline Knowledge First</strong><p>Common foundation before advanced</p><span class="heb">בסיס ידע לפני נושאים מתקדמים</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc purple">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Use Cases - New Direction</div>
+            <div class="tc-chips">
+              <span class="chip warn">1-3 high-impact only</span>
+              <span class="chip neutral">Cross-functional preferred</span>
+              <span class="chip neutral">Measurable value</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col">
+            <div class="d-row warn">Focus on 1-3 high-impact only<div class="d-heb">רק 1-3 תרחישים עם אימפקט</div></div>
+            <div class="d-row">Stop cataloging everything<div class="d-heb">לא לרשום הכל</div></div>
+            <div class="d-row">Prefer cross-functional cases<div class="d-heb">העדפה לתרחישים משותפים</div></div>
+            <div class="d-row">Measurable value, not demos<div class="d-heb">ערך מדיד, לא הדגמות</div></div>
+          </div>
+          <div class="d-heb" style="margin-top:8px;padding-top:6px;border-top:1px dashed var(--border);font-size:10px;">הכיוון: פחות רוחב, יותר עומק. 1-3 פרויקטים עם תוצאות מדידות</div>
+        </div>
+      </div>
+
+      <div class="tc green">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Action Items (8)</div>
+            <div class="tc-chips">
+              <span class="chip ok">Paul - training path</span>
+              <span class="chip ok">Geoff - AI Hub</span>
+              <span class="chip ok">Roee - IP cases</span>
+              <span class="chip neutral">+5 more</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-col" style="gap:4px;">
+            <div class="action-row"><div class="a-num">1</div><div>Define AI training path<div class="d-heb" style="color:var(--green-text);">מסלול למידה</div></div><div class="a-owner">Paul</div></div>
+            <div class="action-row"><div class="a-num">2</div><div>AI Hub onboarding session<div class="d-heb" style="color:var(--green-text);">סשן היכרות Hub</div></div><div class="a-owner">Geoff</div></div>
+            <div class="action-row"><div class="a-num">3</div><div>Approved tools guidance<div class="d-heb" style="color:var(--green-text);">הנחיות כלים מאושרים</div></div><div class="a-owner">Core Team</div></div>
+            <div class="action-row"><div class="a-num">4</div><div>AI Hub rep session<div class="d-heb" style="color:var(--green-text);">סשן נציג Hub</div></div><div class="a-owner">Geoff</div></div>
+            <div class="action-row"><div class="a-num">5</div><div>Data/IP protection cases<div class="d-heb" style="color:var(--green-text);">דוגמאות הגנת מידע</div></div><div class="a-owner">Roee + Matthijs</div></div>
+            <div class="action-row"><div class="a-num">6</div><div>Responsible AI and cost guide<div class="d-heb" style="color:var(--green-text);">הנחיות שימוש ועלויות</div></div><div class="a-owner">Champions</div></div>
+            <div class="action-row"><div class="a-num">7</div><div>Local advanced AI support<div class="d-heb" style="color:var(--green-text);">תמיכה מקומית</div></div><div class="a-owner">Core Team</div></div>
+            <div class="action-row"><div class="a-num">8</div><div>Prioritize 1-3 use cases<div class="d-heb" style="color:var(--green-text);">תעדוף תרחישים</div></div><div class="a-owner">All Reps</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EXEC BOX -->
+    <div class="exec-box">
+      <div class="exec-box-label">Executive Takeaway - The challenge is not lack of tools</div>
+      <div class="exec-grid">
+        <div class="exec-item"><div class="exec-n">1</div><div class="exec-t"><strong>Discoverability</strong> of available AI tools</div><div class="exec-h">גילוי כלים</div></div>
+        <div class="exec-item"><div class="exec-n">2</div><div class="exec-t"><strong>Clear guidance</strong> on approved usage</div><div class="exec-h">הנחיות ברורות</div></div>
+        <div class="exec-item"><div class="exec-n">3</div><div class="exec-t"><strong>Data/IP governance</strong> understanding</div><div class="exec-h">ממשל מידע</div></div>
+        <div class="exec-item"><div class="exec-n">4</div><div class="exec-t"><strong>Right-level training</strong> per role</div><div class="exec-h">הכשרה מותאמת</div></div>
+        <div class="exec-item"><div class="exec-n">5</div><div class="exec-t"><strong>Support model</strong> for responsible scale</div><div class="exec-h">מודל תמיכה</div></div>
+      </div>
+      <div class="exec-footer">האתגר: לא חוסר כלים - אלא גילוי, הנחיות, הגנת מידע, הכשרה מותאמת, ותמיכה מעשית</div>
+    </div>
+
+    <!-- SECURITY & BUDGET -->
+    <div class="sec-head">
+      <span class="sec-tag sec">Security and Budget</span>
+      <span class="sec-title">Communications - Jul / Aug 2026</span>
+      <span class="sec-date">Aug 2026</span>
+    </div>
+
+    <div class="card-grid g2">
+
+      <div class="tc red">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">AI Security and Permissions</div>
+            <div class="tc-chips">
+              <span class="chip danger">Agent permission leakage?</span>
+              <span class="chip neutral">No SAP/Windchill link</span>
+              <span class="chip danger">No full approval yet</span>
+              <span class="chip neutral">5 actions open</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-grid">
+            <div class="d-col">
+              <div class="d-section-label">Core Risk</div>
+              <div class="d-row danger">When an Agent ingests data, do source-system permissions travel with it?<div class="d-heb">האם הרשאות מערכת המקור עוברות עם ה-Agent?</div></div>
+              <div class="d-row">Copilot Pro (M365) and Claude/ChatGPT via AWS Bedrock (Philips VPC)<div class="d-heb">Copilot דרך M365 - Claude/GPT דרך AWS Bedrock בתוך VPC</div></div>
+              <div class="d-row ok">No direct SAP/Windchill today - all input is manual<div class="d-heb">אין חיבור ישיר - הזנה ידנית בלבד</div></div>
+              <div class="d-row danger">No end-to-end approval for all use scenarios yet<div class="d-heb">טרם התקבל אישור מלא לכל תרחישי השימוש</div></div>
+              <div class="d-section-label" style="margin-top:8px;">Security Team Engaged</div>
+              <div style="font-family:'Geist Mono',monospace;font-size:10.5px;color:var(--text-2);line-height:1.6;">Debayan Chowdhury - Shelly Singh - Sridatta Magalur - Ketan Kothadiya</div>
+            </div>
+            <div class="d-col">
+              <div class="d-section-label">Action Items</div>
+              <div class="d-col" style="gap:4px;">
+                <div class="action-row"><div class="a-num">A</div><div>Controlled test with Dummy Data - permission leakage across access levels</div><div class="a-owner">Roee</div></div>
+                <div class="action-row"><div class="a-num">B</div><div>Verify Data Labels and DLP in AI scenarios</div><div class="a-owner">Security</div></div>
+                <div class="action-row"><div class="a-num">C</div><div>Final permissions sign-off - Microsoft and Anthropic</div><div class="a-owner">Security</div></div>
+                <div class="action-row"><div class="a-num">D</div><div>Security in every Agent deployment with sensitive data</div><div class="a-owner">All</div></div>
+                <div class="action-row"><div class="a-num">E</div><div>Update AI Champions plan - security awareness and safe practices</div><div class="a-owner">Roee</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc amber">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">AI Budget and Cost Model</div>
+            <div class="tc-chips">
+              <span class="chip neutral">Copilot ~$300/user/yr</span>
+              <span class="chip danger">Token costs - surprise invoices</span>
+              <span class="chip warn">Site budget? Thu agenda</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-grid">
+            <div class="d-col">
+              <div class="d-section-label">Open Questions</div>
+              <div class="d-row">Copilot Pro: ~$300/user/year (flat) - how many Haifa users?<div class="d-heb">~300$ ליוזר לשנה - כמה יוזרים בחיפה?</div></div>
+              <div class="d-row danger">Claude/ChatGPT: pay-per-token - scales fast, surprises companies<div class="d-heb">צריכת טוקנים - חברות רבות הופתעו מהחשבונית הראשונה</div></div>
+              <div class="d-row warn">Does AI budget flow directly to site or via global?<div class="d-heb">האם תקציב AI מגיע ישירות לאתר?</div></div>
+              <div class="d-row warn">If site-level budget exists - need a usage strategy<div class="d-heb">אם יש תקציב אתרי - צריך לבנות סביבו אסטרטגיה</div></div>
+              <div class="d-section-label" style="margin-top:8px;">Raise Thursday (S3)</div>
+              <div class="d-row">How many Copilot Pro users in Haifa?</div>
+              <div class="d-row">Who controls the token budget (Claude/GPT)?</div>
+              <div class="d-row">Is there a site-level AI budget?</div>
+              <div class="d-row">What governance prevents cost surprises?</div>
+            </div>
+            <div class="d-col">
+              <div class="d-section-label">Tool Stack - Haifa Today</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+                <div class="tool-tile">
+                  <div class="tt">Copilot Pro</div>
+                  <div class="ts">M365 - All AI Champions<br>Flat rate per user</div>
+                </div>
+                <div class="tool-tile" style="border-color:rgba(212,160,23,0.4);background:var(--amber-bg);">
+                  <div class="tt">Claude and ChatGPT</div>
+                  <div class="ts">AWS Bedrock - Philips VPC<br>Token-based - Ran's team</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RESPONSIBLE AI -->
+    <div class="sec-head">
+      <span class="sec-tag rai">Responsible AI</span>
+      <span class="sec-title">Data Classification and Security Contacts - Aug 2026</span>
+      <span class="sec-date">Aug 2026</span>
+    </div>
+
+    <div class="card-grid g2">
+
+      <div class="tc purple">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Who to Ask - AI Data Security</div>
+            <div class="tc-chips">
+              <span class="chip neutral">RAI Office (global)</span>
+              <span class="chip neutral">Zoi Tokoutsi</span>
+              <span class="chip neutral">4 Haifa security contacts</span>
+              <span class="chip warn">DPO - still to identify</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-grid">
+            <div class="d-col">
+              <div class="d-section-label">Global - Philips RAI Office</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+                <div class="contact-card">
+                  <div class="cn">RAI Office</div>
+                  <div class="ce">dl_RAI_Office@philips.com</div>
+                  <div class="cd">RAI questions and data governance</div>
+                </div>
+                <div class="contact-card" style="border-color:rgba(207,34,46,0.25);background:var(--red-bg);">
+                  <div class="cn">AI Concerns</div>
+                  <div class="ce">AIconcerns@philips.com</div>
+                  <div class="cd">Confidential AI concerns</div>
+                </div>
+              </div>
+              <div class="d-row"><strong>Zoi Tokoutsi</strong> - RAI Office content lead, first contact for governance<div class="d-heb">מחברת תוכן RAI - נקודת קשר ראשונה לממשל</div></div>
+            </div>
+            <div class="d-col">
+              <div class="d-section-label">Haifa - AI Security Team (Jul 2026)</div>
+              <div class="name-tag-grid" style="margin-bottom:8px;">
+                <div class="name-tag">Debayan Chowdhury</div>
+                <div class="name-tag">Shelly Singh</div>
+                <div class="name-tag">Sridatta Magalur</div>
+                <div class="name-tag">Ketan Kothadiya</div>
+              </div>
+              <div class="risk-block">
+                <strong>Gap - still to identify locally</strong>
+                <p>- DPO for ISC Haifa - who rules on IP classification?<br>- Is Haifa DMS data classified as IP? - Osnat and Boris Ch.<br>- Raise in Session 3 (Thursday)</p>
+                <span class="heb">לברר: מיהו DPO מקומי? האם DMS = IP? - אוסנת ובוריס ח׳</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tc red">
+        <div class="tc-head" onclick="toggle(this)">
+          <div style="flex:1">
+            <div class="tc-title">Confidential / Secret Data in AI</div>
+            <div class="tc-chips">
+              <span class="chip danger">Confidential - retention risk</span>
+              <span class="chip danger">Secret - not permitted</span>
+              <span class="chip ok">Copilot M365 - bounded</span>
+              <span class="chip warn">Bedrock - under review</span>
+            </div>
+          </div>
+          <span class="tc-toggle">Details +</span>
+        </div>
+        <div class="tc-body">
+          <div class="d-grid">
+            <div class="d-col">
+              <div class="d-section-label">Data Classification Risks</div>
+              <div class="risk-block" style="margin-bottom:6px;">
+                <strong>Confidential (e.g. DMS, design files, IP)</strong>
+                <p>Data entered into AI tools may be stored, indexed, or used for training - even in approved tools. Scope of retention not fully defined.</p>
+                <span class="heb">מידע שמוזן לכלי AI עלול להישמר, להיות ממוין, או לשמש לאימון</span>
+              </div>
+              <div class="risk-block">
+                <strong>Secret / Restricted (e.g. unreleased specs, patient data)</strong>
+                <p>Must NOT be entered into any AI tool without explicit approval from Data Protection and Legal.</p>
+                <span class="heb">מידע סודי אסור להזין לכלי AI ללא אישור מפורש</span>
+              </div>
+            </div>
+            <div class="d-col">
+              <div class="d-section-label">Haifa Status</div>
+              <div class="d-row ok">Copilot (M365) - within Philips tenant boundary<div class="d-heb">בתוך ה-tenant של Philips</div></div>
+              <div class="d-row warn">Claude/ChatGPT via AWS Bedrock - VPC secured, permission model under review<div class="d-heb">בתוך VPC - מודל הרשאות עדיין נבדק</div></div>
+              <div class="d-section-label" style="margin-top:8px;">Rule of Thumb - until full approval</div>
+              <div class="rule-block">
+                Public and Internal data - OK to use<br>
+                Confidential / Secret - do NOT paste<br>
+                When in doubt - ask before you paste
+                <div class="d-heb" style="margin-top:5px;">כלל אצבע: רק פומבי/פנימי - לא להזין סודי - בספק לשאול</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">Agentic AI in ISC Haifa &nbsp;·&nbsp; Live Dashboard &nbsp;·&nbsp; Updated 11 Aug 2026 &nbsp;·&nbsp; Next: Session 3 TBD</div>
+    <div class="footer-right">
+      <span class="f-tag s1">S1 &nbsp;9 Jul</span>
+      <span class="f-tag s2">S2 &nbsp;16 Jul</span>
+      <span class="f-tag neutral">Roee Lahav &nbsp;·&nbsp; Haifa OPS</span>
+      <span class="f-tag neutral">Philips Internal</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggle(head) {
+    const card = head.closest('.tc');
+    card.classList.toggle('open');
+    const btn = head.querySelector('.tc-toggle');
+    btn.textContent = card.classList.contains('open') ? 'Close -' : 'Details +';
+  }
+</script>
+</body>
+</html>
