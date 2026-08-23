@@ -1698,6 +1698,7 @@
             if (res.ok) {
                 stocksData = await res.json();
                 renderStocksPanel();
+                renderStocksMini(); // update sidebar mini panel
             }
         } catch {}
     }
@@ -3862,6 +3863,7 @@
                     if (Array.isArray(data)) newsItems.push(...data);
                 }
                 newsItems.sort((a, b) => new Date(b.time) - new Date(a.time));
+                renderNewsPanel(); // render news + stocks mini after data arrives
                 if (israelRes.status === 'fulfilled' && israelRes.value.ok) {
                     const data = await israelRes.value.json();
                     if (Array.isArray(data)) { israelNews = data; renderIsraelPanel(); }
