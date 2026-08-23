@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haifa Operations AI Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;500;600;700;800;900&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── DESIGN TOKENS ─── */
+:root {
+  --bg: #F8F8FA;
+  --surface: #FFFFFF;
+  --surface-dim: #F2F2F5;
+  --navy: #00205B;
+  --blue: #0066CC;
+  --blue-mid: #0052A5;
+  --text: #111111;
+  --text-2: #3D3D3D;
+  --text-3: #7A7A85;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.1);
+  --green: #007A48;
+  --green-bg: rgba(0,122,72,0.08);
+  --amber: #A85C00;
+  --amber-bg: rgba(168,92,0,0.08);
+  --red: #B00020;
+  --red-bg: rgba(176,0,32,0.07);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 16px 64px rgba(0,32,91,0.10), 0 2px 8px rgba(0,0,0,0.04);
+  --radius-card: 20px;
+  --radius-inner: calc(20px - 6px);
+  --ease-spring: cubic-bezier(0.32,0.72,0,1);
+  --ease-out: cubic-bezier(0.16,1,0.3,1);
+}
+
+/* ─── RESET & BASE ─── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Geist',-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ─── GRAIN OVERLAY ─── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size:256px 256px;
+  pointer-events:none;
+  z-index:999;
+  opacity:0.04;
+}
+
+/* ─── FLOATING NAV ─── */
+.nav-outer{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  z-index:100;width:min(960px,calc(100vw - 32px));
+}
+.nav-shell{
+  padding:2px;
+  background:rgba(255,255,255,0.7);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,0.9);
+  border-radius:100px;
+  box-shadow:0 4px 32px rgba(0,32,91,0.08),0 1px 0 rgba(255,255,255,0.8) inset;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 10px 10px 20px;
+  border-radius:100px;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+  font-size:15px;font-weight:800;letter-spacing:-0.4px;
+  color:var(--navy);text-decoration:none;
+}
+.nav-logo svg{height:22px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{
+  font-size:13px;font-weight:500;color:var(--text-3);
+  text-decoration:none;padding:7px 14px;border-radius:100px;
+  transition:all 400ms var(--ease-spring);
+}
+.nav-links a:hover{color:var(--text);background:rgba(0,0,0,0.05)}
+.nav-cta{
+  display:flex;align-items:center;gap:8px;
+  background:var(--navy);color:#fff;
+  font-size:13px;font-weight:600;text-decoration:none;
+  padding:8px 8px 8px 16px;border-radius:100px;
+  transition:all 500ms var(--ease-spring);
+}
+.nav-cta:hover{background:var(--blue-mid);transform:scale(1.02)}
+.nav-cta-icon{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  transition:transform 400ms var(--ease-spring);
+}
+.nav-cta:hover .nav-cta-icon{transform:translate(2px,-2px) scale(1.08)}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100dvh;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:0 48px 80px;
+  max-width:1400px;margin:0 auto;position:relative;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:100px;
+  background:var(--surface);border:1px solid var(--border-strong);
+  font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:24px;width:fit-content;
+  box-shadow:var(--shadow-sm);
+}
+.live-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hero-h1{
+  font-size:clamp(56px,8vw,120px);
+  font-weight:900;letter-spacing:-0.04em;line-height:0.92;
+  color:var(--navy);margin-bottom:32px;max-width:10ch;
+}
+.hero-h1 em{color:var(--blue);font-style:normal}
+.hero-sub-row{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:32px;flex-wrap:wrap;
+}
+.hero-desc{
+  font-size:17px;font-weight:300;color:var(--text-2);
+  line-height:1.65;max-width:460px;
+}
+.hero-meta{
+  font-family:'Geist Mono',monospace;
+  font-size:11px;color:var(--text-3);
+  display:flex;flex-direction:column;gap:4px;text-align:right;
+}
+.hero-stats{
+  display:flex;gap:1px;margin-top:48px;
+  background:var(--border);border-radius:16px;overflow:hidden;
+  width:fit-content;box-shadow:var(--shadow-sm);
+}
+.stat-tile{
+  background:var(--surface);padding:20px 32px;text-align:center;min-width:140px;
+}
+.stat-num{font-size:36px;font-weight:900;letter-spacing:-0.04em;color:var(--blue)}
+.stat-num.tbd{color:var(--text-3);font-size:28px}
+.stat-label{font-size:11px;font-weight:500;color:var(--text-3);margin-top:2px}
+.stat-sub{font-family:'Geist Mono',monospace;font-size:10px;color:rgba(122,122,133,0.6)}
+
+/* ─── SECTION WRAPPER ─── */
+.section{padding:80px 48px;max-width:1400px;margin:0 auto}
+.section-title{
+  font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:40px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ─── BENTO GRID ─── */
+.bento{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  grid-auto-rows:auto;
+  gap:12px;
+}
+/* Cards */
+.bcard{
+  border-radius:var(--radius-card);
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--border-strong);
+  padding:6px;
+  box-shadow:var(--shadow-sm);
+  transition:transform 700ms var(--ease-spring), box-shadow 700ms var(--ease-spring);
+}
+.bcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.bcard-inner{
+  background:var(--surface);
+  border-radius:var(--radius-inner);
+  padding:28px;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.8);
+  height:100%;
+}
+.bcard.span-8{grid-column:span 8}
+.bcard.span-4{grid-column:span 4}
+.bcard.span-6{grid-column:span 6}
+.bcard.span-5{grid-column:span 5}
+.bcard.span-7{grid-column:span 7}
+.bcard.span-3{grid-column:span 3}
+.bcard.span-12{grid-column:span 12}
+.bcard.span-4 .bcard-inner{padding:24px}
+.bcard.navy{background:var(--navy)}
+.bcard.navy .bcard-inner{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)}
+.bcard.blue-accent{background:rgba(0,102,204,0.08)}
+.bcard.blue-accent .bcard-inner{background:rgba(0,102,204,0.04)}
+
+/* Card content */
+.card-num{
+  font-family:'Geist Mono',monospace;
+  font-size:11px;font-weight:600;
+  background:var(--blue);color:#fff;
+  padding:4px 10px;border-radius:100px;
+  display:inline-block;margin-bottom:16px;
+}
+.bcard.navy .card-num{background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)}
+.card-title{font-size:22px;font-weight:800;letter-spacing:-0.03em;color:var(--navy);line-height:1.2;margin-bottom:8px}
+.bcard.navy .card-title{color:#fff}
+.card-desc{font-size:13px;font-weight:300;color:var(--text-2);line-height:1.6}
+.bcard.navy .card-desc{color:rgba(255,255,255,0.65)}
+
+/* Tag badges */
+.tag{
+  display:inline-flex;align-items:center;
+  font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;margin-top:14px;
+}
+.tag.active{background:var(--green-bg);color:var(--green)}
+.tag.progress{background:var(--amber-bg);color:var(--amber)}
+.tag.risk{background:var(--red-bg);color:var(--red)}
+.tag.future{background:var(--surface-dim);color:var(--text-3)}
+
+/* Use case rows */
+.uc-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.uc-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;border-radius:12px;
+  background:var(--surface-dim);
+  transition:background 300ms var(--ease-out);cursor:default;
+}
+.uc-row:hover{background:rgba(0,102,204,0.06)}
+.uc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.uc-dot.active{background:var(--green)}
+.uc-dot.progress{background:var(--amber)}
+.uc-name{font-size:12.5px;font-weight:600;color:var(--text);flex:1;min-width:0}
+.uc-dept{
+  font-size:10px;font-weight:500;color:var(--text-3);
+  padding:2px 8px;background:var(--surface);
+  border:1px solid var(--border-strong);border-radius:100px;white-space:nowrap;
+}
+.uc-stat{font-size:10px;font-weight:600;color:var(--blue);white-space:nowrap}
+
+/* Pillar label */
+.pillar{
+  font-size:11px;font-weight:700;color:var(--navy);
+  padding:5px 12px;background:var(--surface-dim);
+  border-radius:8px;display:inline-block;margin-bottom:10px;margin-top:18px;
+}
+
+/* Governance / Decision cards */
+.decision{
+  padding:18px;border-radius:12px;
+  background:var(--surface-dim);
+  border-left:3px solid var(--amber);
+  margin-bottom:10px;
+  transition:all 300ms var(--ease-out);
+}
+.decision:hover{transform:translateX(3px);background:rgba(168,92,0,0.06)}
+.decision.critical{border-left-color:var(--red)}
+.decision.info{border-left-color:var(--blue)}
+.decision-title{font-size:13px;font-weight:700;color:var(--text)}
+.decision-body{font-size:12px;color:var(--text-2);margin-top:4px;line-height:1.55}
+.decision-ask{
+  font-size:11.5px;font-weight:600;color:var(--navy);
+  margin-top:10px;padding:8px 12px;
+  background:rgba(0,32,91,0.05);border-radius:8px;
+}
+
+/* Tool capability cards */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cap{
+  padding:14px;border-radius:12px;
+  background:var(--surface-dim);
+  display:flex;align-items:flex-start;gap:10px;
+  transition:background 300ms var(--ease-out);
+}
+.cap:hover{background:rgba(0,102,204,0.06)}
+.cap-icon{font-size:18px;flex-shrink:0}
+.cap-text{font-size:12px;line-height:1.5}
+.cap-text strong{font-weight:700;display:block;margin-bottom:1px}
+
+/* ─── NEWS SIDEBAR CARD ─── */
+.news-hero{
+  background:var(--navy);
+  border-radius:var(--radius-card);
+  padding:6px;
+  position:relative;overflow:hidden;
+}
+.news-glow{
+  position:absolute;top:-60%;right:-30%;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(0,102,204,0.35) 0%,transparent 70%);
+  pointer-events:none;
+}
+.news-inner{
+  background:rgba(255,255,255,0.03);
+  border-radius:var(--radius-inner);
+  padding:28px;position:relative;z-index:1;
+  border:1px solid rgba(255,255,255,0.07);
+}
+.news-eyebrow{
+  font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);margin-bottom:8px;
+}
+.news-title{
+  font-size:28px;font-weight:900;letter-spacing:-0.04em;
+  color:#fff;line-height:1.05;margin-bottom:4px;
+}
+.news-meta{
+  font-family:'Geist Mono',monospace;font-size:10px;
+  color:rgba(255,255,255,0.35);margin-bottom:20px;
+}
+.story{
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.story:last-of-type{border-bottom:none}
+.story-platform{
+  font-size:8.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+  color:rgba(255,255,255,0.35);margin-bottom:4px;
+}
+.story h3{font-size:13px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:3px}
+.story p{font-size:11.5px;color:rgba(255,255,255,0.55);line-height:1.5;font-weight:300}
+.story-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.story-link{
+  font-size:10.5px;font-weight:500;color:#6FB3FF;
+  text-decoration:none;
+  background:rgba(0,102,204,0.18);
+  padding:3px 10px;border-radius:100px;
+  transition:all 300ms var(--ease-out);
+}
+.story-link:hover{background:rgba(0,102,204,0.35)}
+.story-tag{
+  font-size:9px;font-weight:600;
+  color:rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.07);
+  padding:2px 8px;border-radius:100px;
+}
+.story-tag.philips{color:#86efac;background:rgba(134,239,172,0.1)}
+.story-tag.critical{color:#fca5a5;background:rgba(252,165,165,0.1)}
+.news-tip{
+  background:rgba(255,255,255,0.05);border-radius:12px;
+  padding:14px 16px;margin-top:16px;
+}
+.tip-label{
+  font-size:8.5px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--blue);background:rgba(0,102,204,0.18);
+  display:inline-block;padding:3px 8px;border-radius:100px;margin-bottom:8px;
+}
+.news-tip p{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.5}
+.news-sources{
+  font-family:'Geist Mono',monospace;font-size:9.5px;
+  color:rgba(255,255,255,0.25);text-align:center;margin-top:16px;
+}
+
+/* ─── CTA BUTTONS ─── */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:600;text-decoration:none;
+  padding:10px 10px 10px 18px;border-radius:100px;
+  transition:all 500ms var(--ease-spring);
+  width:fit-content;
+}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--blue-mid);transform:scale(1.02)}
+.btn-ghost{background:var(--surface);color:var(--navy);border:1px solid var(--border-strong);box-shadow:var(--shadow-sm)}
+.btn-ghost:hover{background:var(--surface-dim);transform:scale(1.02)}
+.btn-icon{
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  transition:transform 400ms var(--ease-spring);
+}
+.btn-ghost .btn-icon{background:rgba(0,0,0,0.06)}
+.btn:hover .btn-icon{transform:translate(2px,-2px) scale(1.1)}
+.btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* ─── LINKS BAR ─── */
+.links-bar{
+  display:flex;gap:8px;flex-wrap:wrap;
+  padding:32px 48px 48px;
+  max-width:1400px;margin:0 auto;
+  border-top:1px solid var(--border);
+}
+.link-pill{
+  font-size:13px;font-weight:500;color:var(--blue);
+  background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:100px;padding:9px 20px;text-decoration:none;
+  box-shadow:var(--shadow-sm);
+  transition:all 400ms var(--ease-spring);
+}
+.link-pill:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--navy);
+  padding:28px 48px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+footer .l{font-size:12px;color:rgba(255,255,255,0.45)}
+footer .r a{font-size:12px;color:rgba(255,255,255,0.65);text-decoration:none}
+footer .r a:hover{color:#fff}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal{
+  opacity:0;transform:translateY(32px);filter:blur(6px);
+  transition:opacity 900ms var(--ease-out), transform 900ms var(--ease-out), filter 900ms var(--ease-out);
+}
+.reveal.visible{opacity:1;transform:translateY(0);filter:blur(0)}
+.reveal-delay-1{transition-delay:80ms}
+.reveal-delay-2{transition-delay:160ms}
+.reveal-delay-3{transition-delay:240ms}
+.reveal-delay-4{transition-delay:320ms}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .nav-outer{top:12px}
+  .nav-links{display:none}
+  .hero{padding:100px 20px 60px;min-height:100dvh}
+  .hero-h1{font-size:52px}
+  .hero-stats{flex-direction:column;gap:1px;width:100%}
+  .stat-tile{width:100%;text-align:left;display:flex;align-items:center;gap:16px;padding:14px 20px}
+  .stat-num{font-size:28px}
+  .section{padding:48px 20px}
+  .bento{grid-template-columns:1fr}
+  .bcard.span-8,.bcard.span-4,.bcard.span-6,.bcard.span-5,.bcard.span-7,.bcard.span-3,.bcard.span-12{grid-column:span 1}
+  .cap-grid{grid-template-columns:1fr}
+  .links-bar{padding:24px 20px}
+  footer{padding:20px}
+  .ongoing-strip{padding:20px}
+  .ongoing-grid{grid-template-columns:1fr}
+}
+/* ─── ONGOING TASKS STRIP ─── */
+.ongoing-strip{
+  max-width:1360px;margin:0 auto;
+  padding:0 40px 0;
+}
+.ongoing-label{
+  font-family:'Geist Mono',monospace;
+  font-size:10px;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--text-3);
+  margin-bottom:12px;
+}
+.ongoing-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.ongoing-card{
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:16px;
+  padding:20px 24px;
+  display:flex;gap:18px;align-items:flex-start;
+  transition:box-shadow 0.2s var(--ease-out);
+}
+.ongoing-card:hover{box-shadow:var(--shadow-md)}
+.ongoing-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.ongoing-icon.blue{background:rgba(0,102,204,0.08);color:var(--blue)}
+.ongoing-icon.green{background:rgba(0,122,72,0.08);color:var(--green)}
+.ongoing-body{}
+.ongoing-tag{
+  display:inline-block;font-size:10px;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.05em;
+  padding:2px 8px;border-radius:20px;margin-bottom:6px;
+}
+.ongoing-tag.blue{background:rgba(0,102,204,0.1);color:var(--blue)}
+.ongoing-tag.green{background:rgba(0,122,72,0.1);color:var(--green)}
+.ongoing-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.ongoing-desc{font-size:12px;color:var(--text-2);line-height:1.5;margin-bottom:10px}
+.ongoing-phases{display:flex;gap:6px;flex-wrap:wrap}
+.ongoing-phase{
+  font-size:11px;font-weight:500;color:var(--text-3);
+  background:var(--surface-dim);border:1px solid var(--border);
+  border-radius:20px;padding:3px 10px;
+}
+.ongoing-phase.active{
+  color:var(--green);background:var(--green-bg);
+  border-color:rgba(0,122,72,0.15);
+}
+.ongoing-sessions{
+  font-family:'Geist Mono',monospace;
+  font-size:10px;color:var(--text-3);
+  margin-top:8px;
+}
+</style>
+</head>
+<body>
+
+<!-- ─── FLOATING NAV ─── -->
+<div class="nav-outer">
+  <div class="nav-shell">
+    <nav class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" stroke="#00205B" stroke-width="1.5"/>
+          <circle cx="10.5" cy="10.5" r="2.2" fill="#0066CC"/>
+          <circle cx="16" cy="8.5" r="2.2" fill="#0066CC"/>
+          <circle cx="21.5" cy="10.5" r="2.2" fill="#0066CC"/>
+          <path d="M8 18s3 5 8 5 8-5 8-5" stroke="#0066CC" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Haifa OPS AI
+      </a>
+      <div class="nav-links">
+        <a href="#status">Status Board</a>
+        <a href="#usecases">Use Cases</a>
+        <a href="#governance">Governance</a>
+        <a href="#news">Flash News</a>
+      </div>
+      <a href="https://share.philips.com/sites/HaifaOPSAI" target="_blank" class="nav-cta">
+        SharePoint
+        <span class="nav-cta-icon">↗</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-eyebrow reveal">
+    <span class="live-dot"></span>
+    Live Status Board · 20 Aug 2026
+  </div>
+  <h1 class="hero-h1 reveal reveal-delay-1">Haifa<br>Ops <em>AI</em></h1>
+  <div class="hero-sub-row reveal reveal-delay-2">
+    <p class="hero-desc">A single view for management and employees — what AI tools we run, what we're building, and where we need your direction.</p>
+    <div class="hero-meta">
+      <span>Owner: Roee Lahav</span>
+      <span>OPS Innovation &amp; AI</span>
+    </div>
+  </div>
+  <div class="hero-stats reveal reveal-delay-3">
+    <div class="stat-tile">
+      <div class="stat-num">9</div>
+      <div class="stat-label">Active Use Cases</div>
+      <div class="stat-sub">Across OPS functions</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-num tbd">?</div>
+      <div class="stat-label">Copilot Pro Users</div>
+      <div class="stat-sub">M365 | ~$300/yr per seat</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-num tbd">?</div>
+      <div class="stat-label">Claude Code Users</div>
+      <div class="stat-sub">AWS Bedrock | token-based</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-num tbd">?</div>
+      <div class="stat-label">ChatGPT Enterprise</div>
+      <div class="stat-sub">OpenAI | per-seat</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── ONGOING TASKS STRIP ─── -->
+<div class="ongoing-strip" style="margin-top:32px;margin-bottom:8px">
+  <div class="ongoing-label">Ongoing Initiatives</div>
+  <div class="ongoing-grid">
+
+    <!-- AI Champions Haifa -->
+    <div class="ongoing-card">
+      <div class="ongoing-icon green">&#9733;</div>
+      <div class="ongoing-body">
+        <span class="ongoing-tag green">AI Champions · Haifa</span>
+        <div class="ongoing-title">AI Champions Program — Haifa ISC</div>
+        <div class="ongoing-desc">Building a network of AI Champions across all Haifa OPS functions. Goal: every department has a champion who drives adoption, answers questions, and brings use cases to the CT Core Team.</div>
+        <div class="ongoing-phases">
+          <div class="ongoing-phase active">Phase 1: Knowledge Baseline</div>
+          <div class="ongoing-phase">Phase 2: Look Forward</div>
+          <div class="ongoing-phase">Phase 3: Execute</div>
+        </div>
+        <div class="ongoing-sessions">Phase 1 in progress · August 2026</div>
+      </div>
+    </div>
+
+    <!-- CT Agentic AI Forum -->
+    <div class="ongoing-card">
+      <div class="ongoing-icon blue">&#9881;</div>
+      <div class="ongoing-body">
+        <span class="ongoing-tag blue">CT Core Team · Global</span>
+        <div class="ongoing-title">CT Agentic AI Core Team Forum</div>
+        <div class="ongoing-desc">Global CT forum led by Matthijs Groeneveld. Weekly meetings to align on high-value use cases, governance, and AI scaling across all CT functions. Haifa OPS represented by Roee Lahav.</div>
+        <div class="ongoing-phases">
+          <div class="ongoing-phase active">S1 · 9 Jul</div>
+          <div class="ongoing-phase active">S2 · 16 Jul</div>
+          <div class="ongoing-phase active">S3 · 13 Aug</div>
+          <div class="ongoing-phase active">S4 · 20 Aug</div>
+          <div class="ongoing-phase">S5 · TBD</div>
+        </div>
+        <div class="ongoing-sessions">Focus: Copilot-first · Belt training · Scale from experiments to business value</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── BENTO STATUS BOARD ─── -->
+<div class="section" id="status">
+  <div class="section-title reveal">Haifa OPS AI Program</div>
+
+  <div class="bento">
+
+    <!-- 01 Factory — wide primary card -->
+    <div class="bcard span-8 reveal">
+      <div class="bcard-inner">
+        <div class="card-num">01</div>
+        <div class="card-title">AI Factory &amp; Operations</div>
+        <div class="card-desc">AI applied directly to manufacturing, maintenance, quality, and shop floor processes. The highest-value vector for Haifa.</div>
+        <div class="uc-list" style="margin-top:20px">
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">TMV Gap Assessment Agent</div><div class="uc-dept">ISC</div><div class="uc-stat">80% faster</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Daily Equipment Check (Digital)</div><div class="uc-dept">ISC</div><div class="uc-stat">Zero missed</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">EHS Interactive Training</div><div class="uc-dept">ISC</div><div class="uc-stat">24/7 access</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Predictive Maintenance</div><div class="uc-dept">ISC</div><div class="uc-stat">Planned</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Quality Inspection (CV)</div><div class="uc-dept">ISC</div><div class="uc-stat">Exploring</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Quality — stacked right -->
+    <div class="bcard span-4 reveal reveal-delay-1">
+      <div class="bcard-inner">
+        <div class="card-num">02</div>
+        <div class="card-title">Quality &amp; Compliance</div>
+        <div class="card-desc">Automating documentation, harmonization, and regulatory processes with human oversight.</div>
+        <div style="margin-top:16px">
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">CAPA Writing</div><div class="uc-stat">↓50%</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">QMS Harmonization</div><div class="uc-stat">70% faster</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Regulatory AI Agents</div><div class="uc-stat">CT-wide</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 PLM — medium card -->
+    <div class="bcard span-5 navy reveal reveal-delay-1">
+      <div class="bcard-inner">
+        <div class="card-num">03</div>
+        <div class="card-title">Engineering &amp; PLM</div>
+        <div class="card-desc">Connecting AI to enterprise systems (Windchill, SAP) to accelerate engineering workflows.</div>
+        <div style="margin-top:20px">
+          <div class="uc-row" style="background:rgba(255,255,255,0.06)"><div class="uc-dot active"></div><div class="uc-name" style="color:#fff">Windchill PLM AI Agent</div><div class="uc-stat" style="color:#6FB3FF">5-8h/wk saved</div></div>
+          <div class="uc-row" style="background:rgba(255,255,255,0.04);margin-top:6px"><div class="uc-dot progress"></div><div class="uc-name" style="color:rgba(255,255,255,0.8)">Enterprise Integration</div><div class="uc-stat" style="color:#fca5a5">Needs Decision</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Finance — narrow card -->
+    <div class="bcard span-3 reveal reveal-delay-2">
+      <div class="bcard-inner">
+        <div class="card-num">04</div>
+        <div class="card-title">Finance &amp; Business Ops</div>
+        <div class="card-desc">Automating financial processes, cost modeling, and reporting.</div>
+        <div style="margin-top:16px">
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Global Costing Agent</div><div class="uc-stat">60-70%↑</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Finance Automation</div><div class="uc-stat">In Progress</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 Tools — full width -->
+    <div class="bcard span-4 blue-accent reveal reveal-delay-3">
+      <div class="bcard-inner">
+        <div class="card-num">05</div>
+        <div class="card-title">AI Tools at Philips Haifa</div>
+        <div class="cap-grid" style="margin-top:16px">
+          <div class="cap"><div class="cap-icon">💬</div><div class="cap-text"><strong>Copilot Pro (M365)</strong>Emails, docs, Excel, Teams, meeting notes</div></div>
+          <div class="cap"><div class="cap-icon">⌨</div><div class="cap-text"><strong>Claude Code (AWS)</strong>Code, automation, enterprise systems</div></div>
+          <div class="cap"><div class="cap-icon">⚡</div><div class="cap-text"><strong>ChatGPT Enterprise</strong>General AI, images, custom GPTs</div></div>
+          <div class="cap"><div class="cap-icon">🔒</div><div class="cap-text"><strong>AI Gateway (Philips)</strong>Training, guidance, best practices</div></div>
+        </div>
+        <div style="margin-top:16px;padding:10px 14px;background:rgba(168,92,0,0.08);border-radius:10px;font-size:12px;color:var(--amber);font-weight:500">
+          ⚠ Access requires line manager approval — changed Aug 2026
+        </div>
+      </div>
+    </div>
+
+    <!-- CT Wide + nav links -->
+    <div class="bcard span-8 reveal reveal-delay-2">
+      <div class="bcard-inner" id="usecases">
+        <div class="card-num">06</div>
+        <div class="card-title">CT-Wide AI Use Cases</div>
+        <div class="card-desc">Full landscape — active and proposed across R&amp;D, Quality, Clinical, Commercial, and Operations.</div>
+
+        <div class="pillar">Clinical Innovation &amp; Product Engineering</div>
+        <div class="uc-list">
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">CTQ Ballooning</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">2h/drawing</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">AI-assisted Design Check in CAD</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">2h saved</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">AI-assisted Drawing Generation</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">4h saved</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">AI Knowledge Search Agent</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">10% gain</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Value &amp; Cost Engineering Agents</div><div class="uc-dept">R&amp;D + I&amp;D</div><div class="uc-stat">Cost ctrl</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">PD Lighthouse — SW Dev Lifecycle</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">20% TTM↓</div></div>
+        </div>
+
+        <div class="pillar">Operational Excellence &amp; Automation</div>
+        <div class="uc-list">
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Windchill PLM AI Agent</div><div class="uc-dept">ISC — Roee</div><div class="uc-stat">5-8h/wk</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">QMS Harmonization</div><div class="uc-dept">ISC — Roee</div><div class="uc-stat">70% faster</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Global Costing AI Agent</div><div class="uc-dept">ISC — Roee</div><div class="uc-stat">60-70%↑</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Horizontal Complaint Analysis</div><div class="uc-dept">Quality — Or Green</div><div class="uc-stat">30h/IIA</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Regulatory AI Agents</div><div class="uc-dept">RA — Veronica</div><div class="uc-stat">Refinement</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">DHF &amp; Reliability Establishment</div><div class="uc-dept">QA</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Supplier Contract Drafting</div><div class="uc-dept">Procurement</div><div class="uc-stat">Faster cycles</div></div>
+        </div>
+
+        <div class="pillar">Customer Engagement &amp; Commercial</div>
+        <div class="uc-list">
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Customer Alert + Root Cause</div><div class="uc-dept">Quality</div><div class="uc-stat">Cost avoid</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Win-Loss Analysis (SFDC)</div><div class="uc-dept">Commercial</div><div class="uc-stat">Transformative</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Competitive Intelligence Agent</div><div class="uc-dept">Marketing</div><div class="uc-stat">Faster insights</div></div>
+        </div>
+
+        <div style="font-size:11px;color:var(--text-3);margin-top:14px;padding:10px 14px;background:var(--surface-dim);border-radius:10px;display:flex;gap:16px;align-items:center">
+          <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span> Active</span>
+          <span style="display:inline-flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span> In Progress</span>
+          <span>Source: CT Agentic AI Use Case Library (SharePoint)</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── TWO-COLUMN: GOVERNANCE + NEWS ─── -->
+<div class="section" style="display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start" id="governance">
+
+  <!-- Governance cards -->
+  <div>
+    <div class="section-title reveal">Governance &amp; Management Direction</div>
+    <div class="card-desc reveal" style="margin-bottom:24px">Open decisions requiring leadership input — things blocking further progress or scale.</div>
+
+    <div class="reveal reveal-delay-1">
+      <div class="decision critical">
+        <div class="decision-title">Enterprise System Access for AI</div>
+        <div class="decision-body">AI tools need to connect to Windchill and SAP. Access rights differ between users. No framework exists for how AI should securely access enterprise data.</div>
+        <div class="decision-ask">Who owns the framework for AI-to-enterprise integration?</div>
+      </div>
+      <div class="decision critical">
+        <div class="decision-title">AI Budget Ownership</div>
+        <div class="decision-body">Token-based tools (Claude, ChatGPT) scale with usage. Costs can surprise. Uber burned its entire 2026 AI budget in 4 months. Currently unclear who controls Haifa spend.</div>
+        <div class="decision-ask">Is there a site-level AI budget? Who controls token spend?</div>
+      </div>
+      <div class="decision">
+        <div class="decision-title">Next Pain Points for AI</div>
+        <div class="decision-body">We have 9 active use cases proving value. We need management to identify the next 2-3 highest-value operational pain points where AI should focus next.</div>
+        <div class="decision-ask">What are the top 3 processes costing you the most time or money?</div>
+      </div>
+      <div class="decision">
+        <div class="decision-title">AI Validation &amp; Sign-off</div>
+        <div class="decision-body">When AI generates solutions — who validates the output? Who maintains it over time? Critical for regulated operations (FDA, ISO 13485).</div>
+        <div class="decision-ask">Who signs off on AI-generated work entering production workflows?</div>
+      </div>
+      <div class="decision info">
+        <div class="decision-title">Approval Process — Changed Aug 2026</div>
+        <div class="decision-body">Access to ChatGPT Enterprise and Claude Code now requires <strong>line manager approval</strong> (not AI Champions). Managers evaluate business value before granting access.</div>
+        <div class="decision-ask">Managers: are you aware this is now your responsibility?</div>
+      </div>
+    </div>
+
+    <div class="btn-row reveal" style="margin-top:32px">
+      <a href="https://share.philips.com/sites/HaifaOPSAI/SitePages/Agentic-AI-CT.aspx" class="btn btn-primary" target="_blank">
+        Full Status Board
+        <span class="btn-icon">↗</span>
+      </a>
+      <a href="https://share.philips.com/sites/HaifaOPSAI" class="btn btn-ghost" target="_blank">
+        SharePoint Hub
+        <span class="btn-icon" style="color:var(--navy)">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- News sidebar -->
+  <div class="news-hero reveal reveal-delay-2" id="news">
+    <div class="news-glow"></div>
+    <div class="news-inner">
+      <div class="news-eyebrow">Haifa Operations Technology</div>
+      <h2 class="news-title">AI Flash News.</h2>
+      <div class="news-meta">Week of 18 Aug 2026 · Vol. 1, Issue 1 · Curated by Roee Lahav</div>
+
+      <div class="story">
+        <div class="story-platform">Anthropic / Claude</div>
+        <h3>Anthropic's Revenue Exceeds $65 Billion Annualized</h3>
+        <p>7× growth YoY — massive enterprise adoption of Claude validates the bet Philips is making on this platform.</p>
+        <div class="story-footer">
+          <a href="https://x.com/business/status/2089438395764240791" class="story-link" target="_blank">Read source →</a>
+          <span class="story-tag">Key signal</span>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="story-platform">AI Dev Tools</div>
+        <h3>Cursor Launches Origin Code Hosting</h3>
+        <p>Code hosting without migration. Launched during 6-hour GitHub outage — making the case for redundancy.</p>
+        <div class="story-footer">
+          <a href="https://venturebeat.com/infrastructure/cursor-launches-origin-code-hosting-platform-as-github-outage-exposes-opening-in-ai-coding-race" class="story-link" target="_blank">VentureBeat →</a>
+          <span class="story-tag">For devs</span>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="story-platform">OpenAI / GPT</div>
+        <h3>GPT-5.6 Sol Now 50% Off on OpenRouter</h3>
+        <p>Latest model at half price on batch API, flex, and priority tiers. Top-tier reasoning at lower cost.</p>
+        <div class="story-footer">
+          <a href="https://x.com/OpenRouter/status/2089406144297214339" class="story-link" target="_blank">OpenRouter →</a>
+          <span class="story-tag">Cost saving</span>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="story-platform">Robotics</div>
+        <h3>Google Gemini Robotics 2: Full Humanoid Control</h3>
+        <p>One VLA model controls both upper and lower body. Single architecture across robot types.</p>
+        <div class="story-footer">
+          <a href="https://www.deeplearning.ai/the-batch/issue-366" class="story-link" target="_blank">The Batch →</a>
+          <span class="story-tag philips">Philips relevant</span>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="story-platform">AI Risk</div>
+        <h3>AI Pipelines Faking 86% of Accuracy Gains</h3>
+        <p>"Role drift" — modules abandon assigned functions while metrics improve. Validate your architectures.</p>
+        <div class="story-footer">
+          <a href="https://venturebeat.com/orchestration/one-ai-module-faked-86-of-a-pipelines-accuracy-gains-by-feeding-another-the-answers" class="story-link" target="_blank">VentureBeat →</a>
+          <span class="story-tag critical">Critical</span>
+        </div>
+      </div>
+
+      <div class="story">
+        <div class="story-platform">Meta AI</div>
+        <h3>Muse Code: Cheap AI Coding If You Share Data</h3>
+        <p>1/10th the cost — but only if you let your code train their models. Not for us.</p>
+        <div class="story-footer">
+          <a href="https://www.deeplearning.ai/the-batch/issue-366" class="story-link" target="_blank">The Batch →</a>
+          <span class="story-tag">Not for us</span>
+        </div>
+      </div>
+
+      <div class="news-tip">
+        <div class="tip-label">Try This Week</div>
+        <p>Cursor IDE now has its own code hosting. Connect your GitHub repos via <strong>Origin</strong> for redundancy. If you don't use Cursor yet — ask Roee for a demo.</p>
+      </div>
+
+      <div class="news-sources">Sources: TLDR AI (18 Aug) · The Batch (Issue 366)<br>Updated weekly · Generated by Claude Code</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── LINKS BAR ─── -->
+<div class="links-bar reveal">
+  <a href="https://share.philips.com/sites/HaifaOPSAI" class="link-pill" target="_blank">Haifa OPS AI SharePoint</a>
+  <a href="https://roeelahavphilips.github.io/philips-haifa-ops-ai-strategy/" class="link-pill" target="_blank">AI Strategy Guide (Hebrew)</a>
+  <a href="https://theagenticawakening.com/the-agentic-awakening.pdf" class="link-pill" target="_blank">Agentic Awakening Report</a>
+  <a href="https://share.philips.com/sites/Intranet_GlobalAIhub" class="link-pill" target="_blank">Global AI Hub</a>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="l">Philips Haifa Operations &nbsp;|&nbsp; AI Status Board &nbsp;|&nbsp; Internal Use Only</div>
+  <div class="r"><a href="mailto:roee.lahav@philips.com">roee.lahav@philips.com</a></div>
+</footer>
+
+<!-- ─── SCROLL REVEAL OBSERVER ─── -->
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
