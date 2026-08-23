@@ -1282,19 +1282,41 @@
     </div>
 
     <div class="main-layout">
-        <!-- LEFT: Projects (70% of screen) -->
-        <div class="card mobile-panel" data-panel="projects" style="overflow:hidden;display:flex;flex-direction:column">
-            <div class="card-header" style="flex-shrink:0;padding-bottom:6px;margin-bottom:6px">
-                <h2 style="font-size:1rem">Portfolio</h2>
-                <div style="display:flex;gap:6px;align-items:center">
-                    <button class="btn btn-sm btn-ghost" onclick="expandAllProjects()" style="padding:4px 8px;font-size:0.7rem;border:1px solid #e2e8f0" title="Expand all">&#9660; All</button>
-                    <button class="btn btn-sm btn-ghost" onclick="collapseAllProjects()" style="padding:4px 8px;font-size:0.7rem;border:1px solid #e2e8f0" title="Collapse all">&#9650; All</button>
-                    <button class="btn btn-sm btn-primary" onclick="openWeeklyReview()" style="padding:4px 10px;font-size:0.75rem">Weekly Review</button>
-                    <button class="btn btn-sm btn-primary" onclick="openAddProject()" style="padding:4px 10px;font-size:0.75rem">+ Add</button>
-                    <button class="btn btn-sm btn-primary" onclick="openTimelineFullscreen()" style="padding:4px 10px;font-size:0.75rem">&#x26F6;</button>
+        <!-- LEFT: Projects + Briefing (70% of screen) -->
+        <div class="mobile-panel" data-panel="projects" style="display:flex;flex-direction:column;gap:6px;overflow:hidden;min-height:0">
+            <!-- Portfolio Card -->
+            <div class="card" style="overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0">
+                <div class="card-header" style="flex-shrink:0;padding-bottom:6px;margin-bottom:6px">
+                    <h2 style="font-size:1rem">Portfolio</h2>
+                    <div style="display:flex;gap:6px;align-items:center">
+                        <button class="btn btn-sm btn-ghost" onclick="expandAllProjects()" style="padding:4px 8px;font-size:0.7rem;border:1px solid #e2e8f0" title="Expand all">&#9660; All</button>
+                        <button class="btn btn-sm btn-ghost" onclick="collapseAllProjects()" style="padding:4px 8px;font-size:0.7rem;border:1px solid #e2e8f0" title="Collapse all">&#9650; All</button>
+                        <button class="btn btn-sm btn-primary" onclick="openWeeklyReview()" style="padding:4px 10px;font-size:0.75rem">Weekly Review</button>
+                        <button class="btn btn-sm btn-primary" onclick="openAddProject()" style="padding:4px 10px;font-size:0.75rem">+ Add</button>
+                        <button class="btn btn-sm btn-primary" onclick="openTimelineFullscreen()" style="padding:4px 10px;font-size:0.75rem">&#x26F6;</button>
+                    </div>
                 </div>
+                <div id="ganttContainer" style="flex:1;overflow-y:auto;min-height:0"></div>
             </div>
-            <div id="ganttContainer" style="flex:1;overflow-y:auto"></div>
+
+            <!-- Morning Briefing Card -->
+            <div id="briefingCardWrapper" style="flex-shrink:0;display:flex;flex-direction:column;height:240px;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.06)">
+                <!-- Header -->
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 12px;background:linear-gradient(135deg,#0f172a,#1e1e3a);flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.07)">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:0.9rem">⚡</span>
+                        <span style="font-size:0.75rem;font-weight:700;color:white;letter-spacing:0.02em">Morning Briefing</span>
+                        <span id="briefingCardBadge" style="font-size:0.5rem;padding:1px 5px;border-radius:3px;background:rgba(34,197,94,0.2);color:#4ade80;border:1px solid rgba(34,197,94,0.25);display:none">LIVE</span>
+                        <span id="briefingCardAge" style="font-size:0.5rem;color:#64748b;margin-left:2px"></span>
+                    </div>
+                    <div style="display:flex;gap:5px;align-items:center">
+                        <span style="font-size:0.5rem;color:#475569">Auto-refresh 07:00</span>
+                        <button id="briefingRefreshBtn" onclick="refreshBriefingCard()" style="padding:3px 9px;background:linear-gradient(135deg,#CC0000,#e53935);color:white;border:none;border-radius:4px;font-size:0.62rem;font-weight:700;cursor:pointer;transition:opacity 0.15s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">↻ Refresh</button>
+                    </div>
+                </div>
+                <!-- Content -->
+                <div id="briefingCardContent" style="flex:1;overflow-y:auto;padding:8px 12px;background:linear-gradient(160deg,#0f172a,#1a1a2e);font-family:'Segoe UI',sans-serif"></div>
+            </div>
         </div>
 
         <!-- RIGHT: Sidebar (30% of screen) — stacked panels -->
@@ -1846,6 +1868,7 @@
         renderWeatherPanel();
         renderWindchillPanel();
         renderCombinedDigest();
+        renderBriefingCard();
         renderStocksPanel();
         checkReminders();
     }
@@ -2093,6 +2116,7 @@
             if (res.ok) {
                 copilotData = await res.json();
                 renderCombinedDigest();
+                renderBriefingCard();
             }
         } catch {}
     }
@@ -2122,16 +2146,17 @@
             if (res.ok) {
                 copilotData = await res.json();
                 renderCombinedDigest();
+                renderBriefingCard();
                 if (navigator.vibrate) navigator.vibrate([20, 50, 20]);
             } else {
                 const syncedRes = await fetch('/api/synced/digest');
-                if (syncedRes.ok) { copilotData = await syncedRes.json(); renderCombinedDigest(); }
+                if (syncedRes.ok) { copilotData = await syncedRes.json(); renderCombinedDigest(); renderBriefingCard(); }
                 else if (panel) panel.innerHTML = `<div style="color:#ff6b6b;font-size:0.8rem;padding:12px">Server error. Next auto-refresh in 2h.</div>`;
             }
         } catch(e) {
             try {
                 const syncedRes = await fetch('/api/synced/digest');
-                if (syncedRes.ok) { copilotData = await syncedRes.json(); renderCombinedDigest(); return; }
+                if (syncedRes.ok) { copilotData = await syncedRes.json(); renderCombinedDigest(); renderBriefingCard(); return; }
             } catch {}
             if (panel) panel.innerHTML = `<div style="color:#ff6b6b;font-size:0.8rem;padding:12px">&#9888; Error: ${e.message}</div>`;
         }
@@ -2247,9 +2272,88 @@
                 if (deletedCopilotItems.includes(itemId)) return '';
                 return `<div dir="auto" style="display:flex;align-items:flex-start;gap:4px;padding:2px 0 2px 8px;font-size:0.7rem;line-height:1.5;border-right:2px solid #444;margin:2px 0;color:#ccc;unicode-bidi:plaintext"><span style="flex:1">${content}</span><span onclick="deleteCopilotItem('${itemId.replace(/'/g, "\\'")}')" style="cursor:pointer;font-size:0.6rem;opacity:0.3;transition:opacity 0.15s;padding:0 3px;flex-shrink:0;color:#888" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3" title="Dismiss">&#10005;</span></div>`;
             })
+            .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" style="color:#60a5fa;text-decoration:none;border-bottom:1px solid rgba(96,165,250,0.4);transition:opacity 0.15s" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">$1 ↗</a>')
+            .replace(/(?<![("'=])(https?:\/\/\S+)/g, '<a href="$1" target="_blank" style="color:#60a5fa;font-size:0.6rem;opacity:0.7" title="$1">🔗</a>')
             .replace(/\n\n/g, '<br>')
             .replace(/\n/g, '');
     }
+
+    // ============ BRIEFING CARD (below Portfolio) ============
+    function renderBriefingCard() {
+        const content = document.getElementById('briefingCardContent');
+        const ageEl = document.getElementById('briefingCardAge');
+        const badge = document.getElementById('briefingCardBadge');
+        if (!content) return;
+
+        if (!copilotData || !copilotData.generated || !copilotData.raw || copilotData.raw.length < 30) {
+            content.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px">
+                <div style="font-size:1.4rem">⚡</div>
+                <div style="font-size:0.75rem;color:#94a3b8;text-align:center">No briefing yet.<br>Connect M365 then click <strong style="color:#fff">↻ Refresh</strong></div>
+            </div>`;
+            if (ageEl) ageEl.textContent = '';
+            if (badge) badge.style.display = 'none';
+            return;
+        }
+
+        const ageMin = Math.round((Date.now() - new Date(copilotData.generated)) / 60000);
+        const ageText = ageMin < 1 ? 'just now' : ageMin < 60 ? ageMin + 'm ago' : Math.round(ageMin/60) + 'h ago';
+        const isRecent = ageMin < 10;
+        if (ageEl) ageEl.textContent = ageText;
+        if (badge) badge.style.display = isRecent ? 'inline' : 'none';
+
+        const stats = copilotData.stats || {};
+        const statsHtml = `<div style="display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap;flex-shrink:0">
+            ${stats.unread !== undefined ? `<span style="font-size:0.55rem;padding:1px 5px;border-radius:3px;background:rgba(204,0,0,0.2);color:#fca5a5;border:1px solid rgba(204,0,0,0.3)">📬 ${stats.unread} unread</span>` : ''}
+            ${stats.readNoReply !== undefined ? `<span style="font-size:0.55rem;padding:1px 5px;border-radius:3px;background:rgba(251,146,60,0.15);color:#fdba74;border:1px solid rgba(251,146,60,0.3)">⏳ ${stats.readNoReply} pending reply</span>` : ''}
+            ${stats.upcomingMeetings !== undefined ? `<span style="font-size:0.55rem;padding:1px 5px;border-radius:3px;background:rgba(34,197,94,0.12);color:#86efac;border:1px solid rgba(34,197,94,0.25)">📅 ${stats.upcomingMeetings} upcoming</span>` : ''}
+        </div>`;
+
+        content.innerHTML = statsHtml + `<div style="font-size:0.68rem;color:#cbd5e1;line-height:1.55">${simpleMarkdownDark(copilotData.raw)}</div>`;
+    }
+
+    async function refreshBriefingCard() {
+        const content = document.getElementById('briefingCardContent');
+        const btn = document.getElementById('briefingRefreshBtn');
+        if (btn) { btn.disabled = true; btn.textContent = '...'; }
+        if (content) content.innerHTML = `<div style="display:flex;flex-direction:column;gap:5px;padding:4px 0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <div style="font-size:1rem;animation:spin 1.5s linear infinite">⚡</div>
+                <div style="font-size:0.72rem;color:#94a3b8">Generating briefing from Outlook + Gmail...</div>
+            </div>
+            ${['🚨 ACTION NOW','📧 EMAILS','📅 TODAY','🟢 NEXT BEST ACTION'].map(() =>
+                `<div style="height:14px;background:linear-gradient(90deg,#1e293b,#2d3748,#1e293b);border-radius:3px;background-size:200%;animation:shimmerDark 1.5s infinite"></div>`
+            ).join('')}
+        </div>`;
+        try {
+            const res = await fetch('/api/copilot/refresh', { method: 'POST' });
+            if (res.ok) {
+                copilotData = await res.json();
+                renderBriefingCard();
+                renderCombinedDigest(); // sync the right-sidebar panel too
+            }
+        } catch(e) {
+            if (content) content.innerHTML = `<div style="font-size:0.7rem;color:#f87171;padding:8px">Error: ${e.message}</div>`;
+        }
+        if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh'; }
+    }
+
+    // Schedule auto-refresh at 07:00 Israel time every day
+    function scheduleDailyBriefing() {
+        const msToNext7am = () => {
+            const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Jerusalem' }));
+            const next = new Date(now);
+            next.setHours(7, 0, 0, 0);
+            if (now >= next) next.setDate(next.getDate() + 1);
+            return next - now;
+        };
+        setTimeout(function trigger() {
+            console.log('[Briefing] 07:00 auto-refresh');
+            refreshBriefingCard();
+            setTimeout(trigger, 24 * 60 * 60 * 1000); // repeat daily
+        }, msToNext7am());
+        console.log('[Briefing] Next 07:00 refresh in', Math.round(msToNext7am() / 60000), 'min');
+    }
+    scheduleDailyBriefing();
 
     // On page load: fetch digest, trigger fresh if stale (>1h) or missing
     async function initMorningBriefing() {
@@ -2268,7 +2372,7 @@
     initMorningBriefing();
     // Auto-refresh every 2 hours
     setInterval(fetchCopilotDigest, 2 * 60 * 60 * 1000);
-    setInterval(() => { if (copilotData && copilotData.generated) renderCombinedDigest(); }, 60000);
+    setInterval(() => { if (copilotData && copilotData.generated) { renderCombinedDigest(); renderBriefingCard(); } }, 60000);
     setInterval(() => {
         console.log('[Briefing] 2h auto-refresh:', new Date().toLocaleTimeString());
         refreshCopilotDigest();
