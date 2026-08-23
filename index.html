@@ -1410,21 +1410,24 @@
         return { projects: [], reminders: [], authenticated: false };
     }
 
-    // On Render (cloud), load synced projects if local state is empty
-    (async function loadSyncedProjects() {
-        if (state.projects.length === 0) {
-            try {
-                const res = await fetch('/api/synced/projects');
-                if (res.ok) {
-                    const projects = await res.json();
-                    if (Array.isArray(projects) && projects.length > 0) {
-                        state.projects = projects;
-                        saveState();
-                        if (typeof renderAll === 'function') renderAll();
-                    }
-                }
-            } catch(e) {}
-        }
+    // Track whether localStorage was fresh before hardcoded init runs
+    const _wasLocalFresh = state.projects.length === 0;
+
+    // Load projects from server — authoritative source, covers GitHub Pages fresh loads
+    (async function loadProjectsFromServer() {
+        try {
+            const res = await fetch('/api/projects');
+            if (!res.ok) return;
+            const projects = await res.json();
+            if (!Array.isArray(projects) || projects.length === 0) return;
+            // Use server if: localStorage was originally empty (fresh/GitHub Pages load)
+            // OR server has more projects than local (projects added from another device)
+            if (_wasLocalFresh || projects.length > state.projects.length) {
+                state.projects = projects;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                if (typeof renderAll === 'function') renderAll();
+            }
+        } catch(e) {}
     })();
 
     function saveState() {
@@ -1457,7 +1460,7 @@
     }
 
     // ============ INIT WITH PORTFOLIO PROJECTS ============
-    const PROJECTS_VERSION = 'v3-2026-07-13';
+    const PROJECTS_VERSION = 'v4-2026-08-19';
     if (state.projects.length === 0 || !state.projects[0].status || localStorage.getItem('projectsVersion') !== PROJECTS_VERSION) {
         state.projects = [
             {
@@ -1472,12 +1475,12 @@
                     { id: 'psi5', text: 'Office H1 (Web) + Gmail on device', done: true, deadline: '2026-06-20', owner: 'IT' },
                     { id: 'psi6', text: 'App requirements document (sent to Asaf)', done: true, deadline: '2026-06-25', owner: 'Roee' },
                     { id: 'psi7', text: 'IT approval + Office + OneDrive sync on device', done: true, deadline: '2026-06-30', owner: 'IT' },
-                    { id: 'psi8', text: 'Meeting Roee + Asaf — requirements + technology choice', done: false, deadline: '2026-07-13', owner: 'Roee' },
-                    { id: 'psi9', text: 'Asaf collects device from his desk (PIN: 112233)', done: false, deadline: '2026-07-13', owner: 'Asaf' },
-                    { id: 'psi10', text: 'Validate each image uploads to OPS.Haifa.Camera OneDrive', done: false, deadline: '2026-07-14', owner: 'Asaf' },
+                    { id: 'psi8', text: 'Meeting Roee + Asaf — requirements + technology choice', done: true, deadline: '2026-07-13', owner: 'Roee' },
+                    { id: 'psi9', text: 'Asaf collects device from his desk (PIN: 112233)', done: true, deadline: '2026-07-13', owner: 'Asaf' },
+                    { id: 'psi10', text: 'Validate each image uploads to OPS.Haifa.Camera OneDrive', done: true, deadline: '2026-07-14', owner: 'Asaf' },
                     { id: 'psi11', text: 'Define scenarios/use cases for today', done: false, deadline: '2026-07-13', owner: 'Roee' },
                     { id: 'psi12', text: 'Decide on application/script method based on actual work', done: false, deadline: '2026-07-14', owner: 'Roee' },
-                    { id: 'psi13', text: 'Photo checklist with Michael (angles + video)', done: false, deadline: '2026-07-16', owner: 'Roee' },
+                    { id: 'psi13', text: 'Photo checklist with Michael (angles + video)', done: true, deadline: '2026-07-16', owner: 'Roee' },
                     { id: 'psi14', text: 'POC Asaf — photo + auto-save to folder', done: false, deadline: '2026-07-17', owner: 'Asaf' },
                     { id: 'psi15', text: 'Nimrod Bar approval — is model dropdown needed?', done: false, deadline: '2026-07-17', owner: 'Roee' },
                     { id: 'psi16', text: 'Draft work instruction for operators', done: false, deadline: '2026-07-18', owner: 'Production' },
@@ -1508,6 +1511,7 @@
                     { id: '3p4', text: 'Schedule demos with each company', done: false, deadline: '2026-07-20', owner: 'Roee' },
                     { id: '3p5', text: 'Evaluate products vs factory requirements', done: false, deadline: '2026-07-30', owner: 'Roee' },
                     { id: '3p6', text: 'Comparison matrix + recommendation', done: false, deadline: '2026-08-10', owner: 'Roee' },
+                    { id: 't1785138674628', text: 'Fronto - thru Gili', done: false, deadline: '2026-08-15' },
                 ],
                 nextActions: [
                     { text: 'Call/email all 3 vendors this week', owner: 'Roee', date: '2026-07-14' },
@@ -3937,14 +3941,15 @@
                 });
             } catch(e) {}
 
-            // Load synced projects FROM server (for cloud/Render)
+            // Load projects FROM server (authoritative — works on GitHub Pages and Render)
             try {
-                const projRes = await fetch('/api/synced/projects');
+                const projRes = await fetch('/api/projects');
                 if (projRes.ok) {
-                    const syncedProjects = await projRes.json();
-                    if (Array.isArray(syncedProjects) && syncedProjects.length > 0 && state.projects.length === 0) {
-                        state.projects = syncedProjects;
-                        saveState();
+                    const serverProjects = await projRes.json();
+                    if (Array.isArray(serverProjects) && serverProjects.length > 0 &&
+                        (state.projects.length === 0 || serverProjects.length > state.projects.length)) {
+                        state.projects = serverProjects;
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
                     }
                 }
             } catch(e) {}
