@@ -437,6 +437,8 @@ footer .r a:hover{color:#fff}
   footer{padding:20px}
   .ongoing-strip{padding:20px}
   .ongoing-grid{grid-template-columns:1fr}
+  .mgr-brief{padding:20px}
+  .action-table{font-size:12px}
 }
 /* ─── ONGOING TASKS STRIP ─── */
 .ongoing-strip{
@@ -496,6 +498,69 @@ footer .r a:hover{color:#fff}
   font-size:10px;color:var(--text-3);
   margin-top:8px;
 }
+/* ─── MANAGER BRIEF ─── */
+.mgr-brief{
+  max-width:1360px;margin:0 auto;
+  padding:24px 40px 0;
+}
+.mgr-brief-card{
+  background:var(--navy);
+  border-radius:20px;
+  padding:32px 36px;
+  color:#fff;
+}
+.mgr-brief-top{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;
+}
+.mgr-brief-label{
+  font-family:'Geist Mono',monospace;
+  font-size:10px;font-weight:500;text-transform:uppercase;
+  letter-spacing:0.1em;color:rgba(255,255,255,0.4);
+  margin-bottom:4px;
+}
+.mgr-brief-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.02em}
+.mgr-brief-date{
+  font-family:'Geist Mono',monospace;font-size:11px;
+  color:rgba(255,255,255,0.4);
+}
+.mgr-brief-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.mgr-section-label{
+  font-family:'Geist Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.35);margin-bottom:10px;
+}
+.mgr-points{list-style:none;display:flex;flex-direction:column;gap:7px}
+.mgr-points li{
+  font-size:13px;color:rgba(255,255,255,0.82);
+  padding:8px 12px;
+  background:rgba(255,255,255,0.06);border-radius:8px;
+  border-left:2px solid var(--blue);
+  line-height:1.4;
+}
+.mgr-points li strong{color:#fff;font-weight:600}
+.action-table{width:100%;border-collapse:collapse;font-size:12px}
+.action-table th{
+  text-align:left;padding:8px 10px;
+  font-family:'Geist Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:0.08em;
+  color:rgba(255,255,255,0.35);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.action-table td{
+  padding:8px 10px;
+  color:rgba(255,255,255,0.75);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  vertical-align:top;font-size:12px;
+}
+.action-table tr:last-child td{border-bottom:none}
+.action-owner{
+  font-family:'Geist Mono',monospace;font-size:10px;
+  color:rgba(255,255,255,0.45);white-space:nowrap;
+}
+@media(max-width:900px){
+  .mgr-brief-cols{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -532,7 +597,7 @@ footer .r a:hover{color:#fff}
 <div class="hero">
   <div class="hero-eyebrow reveal">
     <span class="live-dot"></span>
-    Live Status Board · 20 Aug 2026
+    Live Status Board · 27 Aug 2026
   </div>
   <h1 class="hero-h1 reveal reveal-delay-1">Haifa<br>Ops <em>AI</em></h1>
   <div class="hero-sub-row reveal reveal-delay-2">
@@ -599,12 +664,57 @@ footer .r a:hover{color:#fff}
           <div class="ongoing-phase active">S2 · 16 Jul</div>
           <div class="ongoing-phase active">S3 · 13 Aug</div>
           <div class="ongoing-phase active">S4 · 20 Aug</div>
-          <div class="ongoing-phase">S5 · TBD</div>
+          <div class="ongoing-phase active">S5 · 27 Aug</div>
+          <div class="ongoing-phase">S6 · TBD</div>
         </div>
-        <div class="ongoing-sessions">Focus: Copilot-first · Belt training · Scale from experiments to business value</div>
+        <div class="ongoing-sessions">Latest: Copilot-first · AOP 2027 budget · Cross-BU scaling · AI training 1-2h/week</div>
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ─── MANAGER BRIEF ─── -->
+<div class="mgr-brief" style="margin-top:24px">
+  <div class="mgr-brief-card reveal">
+    <div class="mgr-brief-top">
+      <div>
+        <div class="mgr-brief-label">Manager Brief · Latest Session</div>
+        <div class="mgr-brief-title">CT Agentic AI Core Team — S5 Recap</div>
+      </div>
+      <div class="mgr-brief-date">27 Aug 2026</div>
+    </div>
+    <div class="mgr-brief-cols">
+      <!-- Key takeaways -->
+      <div>
+        <div class="mgr-section-label">What happened</div>
+        <ul class="mgr-points">
+          <li><strong>Copilot-first is now official policy.</strong> Copilot Chat &amp; Agents are the baseline for all employees. ChatGPT/Claude are for specific advanced needs only.</li>
+          <li><strong>AOP 2027 budget gap raised by Roee.</strong> AI spend is expected to move to BU responsibility — no model finalized yet. AOP closes end of October. Decision urgently needed.</li>
+          <li><strong>AI training: 1-2h/week recommended.</strong> White Belt + Yellow Belt. Managers should complete White Belt and encourage their teams.</li>
+          <li><strong>Cross-BU scaling accelerating.</strong> R&amp;D agents (CR Agent, Drawing Review Agent) expanding to broader CT/AMI deployment. Ultrasound, DXR, MR now collaborating.</li>
+          <li><strong>Marketing: CT Content Agent launching.</strong> SharePoint AI search agent in testing — targets launch within days. RFP Agent reduces repetitive tender work.</li>
+          <li><strong>€1M+ infrastructure decision pending.</strong> R&amp;D evaluating local AI hosting to reduce token costs. Finance involved.</li>
+          <li><strong>Leadership session Sept 8.</strong> Zoe joining. Focus: current AI state, what works, open questions, AI Portal navigation.</li>
+          <li><strong>Roee's open question to CT:</strong> Should Philips scale through Copilot only, or also broader Claude/ChatGPT deployment for larger transformation?</li>
+        </ul>
+      </div>
+      <!-- Action items -->
+      <div>
+        <div class="mgr-section-label">Action Items (S5)</div>
+        <table class="action-table">
+          <tr><th>Action</th><th>Owner</th></tr>
+          <tr><td>Define guidance for AI profile upgrade justification process</td><td class="action-owner">Matthijs</td></tr>
+          <tr><td>Provide managers guidance on AI budgeting for AOP 2027</td><td class="action-owner">Matthijs</td></tr>
+          <tr><td>Continue AI training guidance &amp; adoption</td><td class="action-owner">Leadership</td></tr>
+          <tr><td>Prepare AI segment for Sept 8 leadership meeting</td><td class="action-owner">Geoff / Matthijs</td></tr>
+          <tr><td>Expand R&amp;D inventory of AI agents and use cases</td><td class="action-owner">Henning</td></tr>
+          <tr><td>Continue evaluation of local AI hosting / business case</td><td class="action-owner">R&amp;D + Finance</td></tr>
+          <tr><td>Share learnings from Service AI deployment activities</td><td class="action-owner">Shu-Zhi</td></tr>
+          <tr><td>Continue testing and rollout of Marketing AI agents</td><td class="action-owner">Danielle</td></tr>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -767,6 +877,26 @@ footer .r a:hover{color:#fff}
         <div class="decision-body">Access to ChatGPT Enterprise and Claude Code now requires <strong>line manager approval</strong> (not AI Champions). Managers evaluate business value before granting access.</div>
         <div class="decision-ask">Managers: are you aware this is now your responsibility?</div>
       </div>
+      <div class="decision critical">
+        <div class="decision-title">S5: AOP 2027 AI Budget — Urgent</div>
+        <div class="decision-body">AI spend is expected to shift to BU responsibility. AOP closes end of October. No finalized budget model exists yet. Managers need clarity now to plan properly.</div>
+        <div class="decision-ask">How should managers budget AI consumption in 2027? (Matthijs to provide guidance)</div>
+      </div>
+      <div class="decision">
+        <div class="decision-title">S5: AI Profile Upgrade Process</div>
+        <div class="decision-body">Employees requesting ChatGPT upgrades (Standard → Pioneer) must now explain intended use, use cases, and expected ROI. Not a full business case — but enough for informed manager decision.</div>
+        <div class="decision-ask">Managers: require justification before approving profile upgrades</div>
+      </div>
+      <div class="decision">
+        <div class="decision-title">S5: Data Governance — How Much Is Safe?</div>
+        <div class="decision-body">Marketing and Service teams are uncertain about allowed data usage in AI tools. What can be shared? What are the guardrails? Henning suggests Kairos (Philips-controlled) for sensitive data.</div>
+        <div class="decision-ask">Where is the official Philips guidance on AI data boundaries?</div>
+      </div>
+      <div class="decision">
+        <div class="decision-title">S5: Local AI Infrastructure — €1M+ Decision</div>
+        <div class="decision-body">R&D evaluating local AI hosting to reduce token cost dependency. Infrastructure options could exceed €1M CapEx. Finance is involved. Token-consumption models also escalate rapidly at scale.</div>
+        <div class="decision-ask">R&D + Finance: approve infrastructure business case evaluation</div>
+      </div>
     </div>
 
     <div class="btn-row reveal" style="margin-top:32px">
@@ -870,7 +1000,7 @@ footer .r a:hover{color:#fff}
 
 <!-- ─── FOOTER ─── -->
 <footer>
-  <div class="l">Philips Haifa Operations &nbsp;|&nbsp; AI Status Board &nbsp;|&nbsp; Internal Use Only</div>
+  <div class="l">Philips Haifa Operations &nbsp;|&nbsp; AI Status Board &nbsp;|&nbsp; Updated 27 Aug 2026 &nbsp;|&nbsp; Internal Use Only</div>
   <div class="r"><a href="mailto:roee.lahav@philips.com">roee.lahav@philips.com</a></div>
 </footer>
 
