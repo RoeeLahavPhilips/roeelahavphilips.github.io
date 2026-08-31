@@ -440,7 +440,92 @@ footer .r a:hover{color:#fff}
   .ongoing-grid{grid-template-columns:1fr}
   .mgr-brief{padding:20px}
   .action-table{font-size:12px}
+  .news-strip{padding:0 20px}
+  .news-cards{grid-template-columns:1fr}
+  .gov-full{padding:20px}
 }
+/* ─── NEWS STRIP ─── */
+.news-strip{
+  max-width:1360px;margin:32px auto 0;padding:0 40px;
+}
+.news-strip-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--blue);border-radius:12px 12px 0 0;
+  padding:10px 20px;
+}
+.news-strip-label{
+  font-family:'Geist Mono',monospace;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.08em;color:#fff;
+  display:flex;align-items:center;gap:8px;
+}
+.news-strip-label::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:#fff;opacity:0.7;animation:pulse2 2s infinite;
+}
+@keyframes pulse2{0%,100%{opacity:0.7}50%{opacity:0.3}}
+.news-strip-meta{font-size:10px;color:rgba(255,255,255,0.6)}
+.news-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;border:1px solid var(--border);border-top:none;
+  border-radius:0 0 12px 12px;overflow:hidden;
+  background:var(--surface);
+}
+.news-item{
+  display:block;text-decoration:none;
+  padding:16px 18px;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+  transition:background 0.15s;
+  position:relative;
+}
+.news-item:hover{background:var(--card)}
+.news-item:nth-child(3n){border-right:none}
+.news-item:nth-child(n+4){border-bottom:none}
+.news-item-platform{
+  font-family:'Geist Mono',monospace;font-size:9px;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.06em;
+  color:var(--blue);margin-bottom:5px;
+}
+.news-item-headline{
+  font-size:12.5px;font-weight:600;color:var(--text);
+  line-height:1.4;margin-bottom:6px;
+}
+.news-item-summary{
+  font-size:11px;color:var(--text-2);line-height:1.5;margin-bottom:8px;
+}
+.news-item-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:auto;
+}
+.news-item-tag{
+  font-size:9px;font-weight:600;text-transform:uppercase;
+  padding:2px 7px;border-radius:10px;letter-spacing:0.04em;
+}
+.news-item-tag.philips{background:rgba(0,102,204,0.1);color:var(--blue)}
+.news-item-tag.critical{background:rgba(176,0,32,0.08);color:#B00020}
+.news-item-tag.cost{background:rgba(0,122,72,0.08);color:var(--green)}
+.news-item-tag.info{background:var(--border);color:var(--text-3)}
+.news-item-link{font-size:10px;color:var(--blue);font-weight:500}
+/* ─── GOVERNANCE FULL WIDTH ─── */
+.gov-full{max-width:1360px;margin:0 auto;padding:0 40px}
+.gov-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:900px){
+  .gov-grid{grid-template-columns:1fr}
+}
+/* ─── FOOTER BRAND ─── */
+footer{
+  background:var(--navy);
+  padding:28px 40px;
+  max-width:100%;
+  display:flex;justify-content:space-between;align-items:center;
+}
+footer .f-brand{display:flex;align-items:center;gap:10px}
+footer .f-brand svg{height:28px}
+footer .f-brand .fw{font-family:'Geist',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.07em;color:rgba(255,255,255,0.7)}
+footer .f-copy{font-size:11px;color:rgba(255,255,255,0.4)}
+footer .f-right a{font-size:11px;color:rgba(255,255,255,0.6);text-decoration:none}
+
 /* ─── ONGOING TASKS STRIP ─── */
 .ongoing-strip{
   max-width:1360px;margin:0 auto;
@@ -647,6 +732,52 @@ footer .r a:hover{color:#fff}
       <div class="stat-label">ChatGPT Enterprise</div>
       <div class="stat-sub">OpenAI | per-seat</div>
     </div>
+  </div>
+</div>
+
+<!-- ─── NEWS STRIP ─── -->
+<div class="news-strip reveal" id="news">
+  <div class="news-strip-bar">
+    <div class="news-strip-label">AI Flash News &nbsp;·&nbsp; Week of 27 Aug 2026</div>
+    <div class="news-strip-meta">Vol. 2 &nbsp;·&nbsp; Copilot · Claude · Governance &nbsp;·&nbsp; Curated by Roee Lahav</div>
+  </div>
+  <div class="news-cards">
+    <a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/07/30/the-next-measure-of-ai-momentum-is-work-transformed/" class="news-item" target="_blank">
+      <div class="news-item-platform">Microsoft Copilot</div>
+      <div class="news-item-headline">30M Paid Seats — Net Adds More Than Doubled QoQ</div>
+      <div class="news-item-summary">Copilot weekly engagement now matches Outlook and Teams. Validates Philips Copilot-first strategy.</div>
+      <div class="news-item-footer"><span class="news-item-tag philips">Philips relevant</span><span class="news-item-link">Microsoft Blog →</span></div>
+    </a>
+    <a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/07/30/the-next-measure-of-ai-momentum-is-work-transformed/" class="news-item" target="_blank">
+      <div class="news-item-platform">Microsoft Copilot</div>
+      <div class="news-item-headline">Copilot Cowork GA — 30–40% Cost Reduction on Agentic Workflows</div>
+      <div class="news-item-summary">Multi-step agentic workflows generally available. Half of Fortune 500 adopted in 6 months. Relevant for AOP 2027.</div>
+      <div class="news-item-footer"><span class="news-item-tag cost">Cost saving</span><span class="news-item-link">Microsoft Blog →</span></div>
+    </a>
+    <a href="https://venturebeat.com/orchestration/salesforce-just-put-its-entire-crm-inside-claude-and-says-youll-never-need-its-app-again" class="news-item" target="_blank">
+      <div class="news-item-platform">Anthropic / Claude</div>
+      <div class="news-item-headline">Salesforce Puts Entire CRM Inside Claude — No App Needed</div>
+      <div class="news-item-summary">37 pre-built skills via MCP with inherited user permissions. Same pattern Roee uses for Windchill PLM.</div>
+      <div class="news-item-footer"><span class="news-item-tag philips">Philips relevant</span><span class="news-item-link">VentureBeat →</span></div>
+    </a>
+    <a href="https://venturebeat.com/orchestration/anthropics-new-claude-tag-update-lets-its-slack-agent-read-the-full-conversation-and-jump-in-unprompted" class="news-item" target="_blank">
+      <div class="news-item-platform">Anthropic / Claude</div>
+      <div class="news-item-headline">Claude Tag Reads Full Slack Threads — Joins Conversations Unprompted</div>
+      <div class="news-item-summary">30% better context awareness. Routes work to existing threads. Teams integration coming.</div>
+      <div class="news-item-footer"><span class="news-item-tag info">All users</span><span class="news-item-link">VentureBeat →</span></div>
+    </a>
+    <a href="https://venturebeat.com/ai/enterprise-ais-real-risk-isnt-autonomous-agents-its-the-complexity-between-them" class="news-item" target="_blank">
+      <div class="news-item-platform">Enterprise AI Risk</div>
+      <div class="news-item-headline">Enterprise AI's Real Risk: Complexity Between Agents, Not the Agents Themselves</div>
+      <div class="news-item-summary">Maps directly to Philips: multiple AI tools, no coordination layer, fragmented governance.</div>
+      <div class="news-item-footer"><span class="news-item-tag critical">Critical</span><span class="news-item-link">VentureBeat →</span></div>
+    </a>
+    <a href="https://venturebeat.com/security/when-agents-act-on-their-own-governance-has-to-live-in-the-data-layer" class="news-item" target="_blank">
+      <div class="news-item-platform">AI Governance</div>
+      <div class="news-item-headline">When Agents Act Alone, Governance Must Live in the Data Layer</div>
+      <div class="news-item-summary">Security can't be bolted on after deployment. Directly maps to Philips DMS/Windchill/SAP data questions from S5.</div>
+      <div class="news-item-footer"><span class="news-item-tag critical">Critical</span><span class="news-item-link">VentureBeat →</span></div>
+    </a>
   </div>
 </div>
 
@@ -862,15 +993,13 @@ footer .r a:hover{color:#fff}
   </div>
 </div>
 
-<!-- ─── TWO-COLUMN: GOVERNANCE + NEWS ─── -->
-<div class="section" style="display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start" id="governance">
-
-  <!-- Governance cards -->
+<!-- ─── GOVERNANCE FULL WIDTH ─── -->
+<div class="section gov-full" id="governance">
   <div>
     <div class="section-title reveal">Governance &amp; Management Direction</div>
     <div class="card-desc reveal" style="margin-bottom:24px">Open decisions requiring leadership input — things blocking further progress or scale.</div>
 
-    <div class="reveal reveal-delay-1">
+    <div class="gov-grid reveal reveal-delay-1">
       <div class="decision critical">
         <div class="decision-title">Enterprise System Access for AI</div>
         <div class="decision-body">AI tools need to connect to Windchill and SAP. Access rights differ between users. No framework exists for how AI should securely access enterprise data.</div>
@@ -930,83 +1059,6 @@ footer .r a:hover{color:#fff}
     </div>
   </div>
 
-  <!-- News sidebar -->
-  <div class="news-hero reveal reveal-delay-2" id="news">
-    <div class="news-glow"></div>
-    <div class="news-inner">
-      <div class="news-eyebrow">Haifa Operations Technology</div>
-      <h2 class="news-title">AI Flash News.</h2>
-      <div class="news-meta">Week of 27 Aug 2026 · Vol. 1, Issue 2 · Curated by Roee Lahav</div>
-
-      <div class="story">
-        <div class="story-platform">Microsoft Copilot</div>
-        <h3>30M Paid Seats — Copilot Net Adds More Than Doubled QoQ</h3>
-        <p>Copilot weekly engagement now matches Outlook and Teams. This is why Philips is going Copilot-first — it's becoming the standard enterprise layer.</p>
-        <div class="story-footer">
-          <a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/07/30/the-next-measure-of-ai-momentum-is-work-transformed/" class="story-link" target="_blank">Microsoft Blog →</a>
-          <span class="story-tag philips">Philips relevant</span>
-        </div>
-      </div>
-
-      <div class="story">
-        <div class="story-platform">Microsoft Copilot</div>
-        <h3>Copilot Cowork GA — 30–40% Cost Reduction</h3>
-        <p>Multi-step agentic workflows now generally available. Half the Fortune 500 adopted within 6 months. Directly relevant to Philips AOP 2027 AI budget planning.</p>
-        <div class="story-footer">
-          <a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/07/30/the-next-measure-of-ai-momentum-is-work-transformed/" class="story-link" target="_blank">Microsoft Blog →</a>
-          <span class="story-tag">Cost saving</span>
-        </div>
-      </div>
-
-      <div class="story">
-        <div class="story-platform">Anthropic / Claude</div>
-        <h3>Salesforce Puts Entire CRM Inside Claude</h3>
-        <p>37 pre-built sales skills, live Salesforce data through Claude — no app needed. Built on MCP servers with inherited user permissions. Same pattern Roee uses for Windchill.</p>
-        <div class="story-footer">
-          <a href="https://venturebeat.com/orchestration/salesforce-just-put-its-entire-crm-inside-claude-and-says-youll-never-need-its-app-again" class="story-link" target="_blank">VentureBeat →</a>
-          <span class="story-tag philips">Philips relevant</span>
-        </div>
-      </div>
-
-      <div class="story">
-        <div class="story-platform">Anthropic / Claude</div>
-        <h3>Claude Tag Reads Full Slack Threads — Joins Unprompted</h3>
-        <p>30% better at knowing when to enter a conversation. Routes work to existing threads. "From personal chief of staff to the company's chief of staff." Teams equivalent coming.</p>
-        <div class="story-footer">
-          <a href="https://venturebeat.com/orchestration/anthropics-new-claude-tag-update-lets-its-slack-agent-read-the-full-conversation-and-jump-in-unprompted" class="story-link" target="_blank">VentureBeat →</a>
-          <span class="story-tag">For all users</span>
-        </div>
-      </div>
-
-      <div class="story">
-        <div class="story-platform">Enterprise AI Risk</div>
-        <h3>Enterprise AI's Real Risk: Complexity Between Agents</h3>
-        <p>Not the agents themselves — it's what happens when they interact. Directly maps to Philips scaling challenge: multiple AI tools, no coordination layer.</p>
-        <div class="story-footer">
-          <a href="https://venturebeat.com/ai/enterprise-ais-real-risk-isnt-autonomous-agents-its-the-complexity-between-them" class="story-link" target="_blank">VentureBeat →</a>
-          <span class="story-tag critical">Critical</span>
-        </div>
-      </div>
-
-      <div class="story">
-        <div class="story-platform">AI Governance</div>
-        <h3>When Agents Act Alone, Governance Must Live in the Data Layer</h3>
-        <p>Security and permissions can't be bolted on after deployment. Directly relevant to Philips data governance questions raised in S5 — Windchill/SAP access, DMS data classification.</p>
-        <div class="story-footer">
-          <a href="https://venturebeat.com/security/when-agents-act-on-their-own-governance-has-to-live-in-the-data-layer" class="story-link" target="_blank">VentureBeat →</a>
-          <span class="story-tag critical">Critical</span>
-        </div>
-      </div>
-
-      <div class="news-tip">
-        <div class="tip-label">This Week's Insight</div>
-        <p>Copilot Cowork is now GA with 30-40% cost savings on multi-step workflows. If you're doing repetitive multi-tool tasks in M365 — this is worth testing. Ask Roee for a walkthrough.</p>
-      </div>
-
-      <div class="news-sources">Sources: Microsoft Blog (30 Jul) · VentureBeat (24–27 Aug 2026)<br>Updated weekly · Generated by Claude Code</div>
-    </div>
-  </div>
-
 </div>
 
 <!-- ─── LINKS BAR ─── -->
@@ -1019,8 +1071,20 @@ footer .r a:hover{color:#fff}
 
 <!-- ─── FOOTER ─── -->
 <footer>
-  <div class="l">Philips Haifa Operations &nbsp;|&nbsp; AI Status Board &nbsp;|&nbsp; Updated 27 Aug 2026 &nbsp;|&nbsp; Internal Use Only</div>
-  <div class="r"><a href="mailto:roee.lahav@philips.com">roee.lahav@philips.com</a></div>
+  <div class="f-brand">
+    <svg viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2L37 8.5V27C37 37.5 29 44 20 47C11 44 3 37.5 3 27V8.5Z" fill="#0066CC"/>
+      <polygon points="11,10.5 12,13.5 15,13.5 12.5,15.5 13.5,18.5 11,16.5 8.5,18.5 9.5,15.5 7,13.5 10,13.5" fill="white"/>
+      <polygon points="20,8 21,11 24,11 21.5,13 22.5,16 20,14 17.5,16 18.5,13 16,11 19,11" fill="white"/>
+      <polygon points="29,10.5 30,13.5 33,13.5 30.5,15.5 31.5,18.5 29,16.5 26.5,18.5 27.5,15.5 25,13.5 28,13.5" fill="white"/>
+      <path d="M8 26 Q11 23 14 26 Q17 29 20 26 Q23 23 26 26 Q29 29 32 26" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M8 31 Q11 28 14 31 Q17 34 20 31 Q23 28 26 31 Q29 34 32 31" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M9 36 Q12 33 15 36 Q18 39 21 36 Q24 33 27 36 Q30 39 31 36" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <span class="fw">PHILIPS</span>
+    <span class="f-copy">Haifa Operations &nbsp;·&nbsp; AI Status Board &nbsp;·&nbsp; Updated 27 Aug 2026 &nbsp;·&nbsp; Internal Use Only</span>
+  </div>
+  <div class="f-right"><a href="mailto:roee.lahav@philips.com">roee.lahav@philips.com</a></div>
 </footer>
 
 <!-- ─── SCROLL REVEAL OBSERVER ─── -->
