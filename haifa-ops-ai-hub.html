@@ -231,16 +231,18 @@ body::before{
 /* Use case rows */
 .uc-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}
 .uc-row{
-  display:flex;align-items:center;gap:12px;
+  display:flex;align-items:flex-start;gap:12px;
   padding:10px 14px;border-radius:12px;
   background:var(--surface-dim);
   transition:background 300ms var(--ease-out);cursor:default;
 }
 .uc-row:hover{background:rgba(0,102,204,0.06)}
-.uc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.uc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .uc-dot.active{background:var(--green)}
 .uc-dot.progress{background:var(--amber)}
-.uc-name{font-size:12.5px;font-weight:600;color:var(--text);flex:1;min-width:0}
+.uc-info{flex:1;min-width:0}
+.uc-name{font-size:12.5px;font-weight:600;color:var(--text)}
+.uc-desc{font-size:10px;color:var(--text-3);margin-top:2px;line-height:1.4}
 .uc-dept{
   font-size:10px;font-weight:500;color:var(--text-3);
   padding:2px 8px;background:var(--surface);
@@ -1035,44 +1037,44 @@ footer .f-right a{font-size:11px;color:rgba(255,255,255,0.6);text-decoration:non
 
         <div class="pillar">Clinical Innovation &amp; Product Engineering · R&amp;D</div>
         <div class="uc-list">
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">CTQ Ballooning</div><div class="uc-dept">R&amp;D · Hannah Klinger</div><div class="uc-stat">2h/drawing</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">AI-assisted Design Check in CAD</div><div class="uc-dept">R&amp;D · Toby Lu</div><div class="uc-stat">2h/drawing</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">AI-assisted Drawing Generation</div><div class="uc-dept">R&amp;D · Toby Lu</div><div class="uc-stat">4h/drawing</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">AI-assisted Early Concept Generation in CAD</div><div class="uc-dept">R&amp;D · Toby Lu</div><div class="uc-stat">6h/model</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">AI Knowledge Search Agent</div><div class="uc-dept">R&amp;D · Talal El Chaar</div><div class="uc-stat">10% gain</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Standard Part Selector (Electrical Components)</div><div class="uc-dept">R&amp;D · Bernhard Wagner</div><div class="uc-stat">Acceleration</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Value &amp; Cost Engineering Agents</div><div class="uc-dept">R&amp;D + I&amp;D · Henning</div><div class="uc-stat">Cost ctrl</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">PD Lighthouse — SW Dev Lifecycle Acceleration</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">20% TTM↓</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Literature Mapping (PubMed/Scholar → Clinical Claims)</div><div class="uc-dept">Clinical</div><div class="uc-stat">Proposed</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Literature Review for CER and PMCF</div><div class="uc-dept">Clinical Affairs</div><div class="uc-stat">High impact</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Product Configuration History Review</div><div class="uc-dept">Product Mgmt</div><div class="uc-stat">Proposed</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">AI Software Development</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">High impact</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">DHF Automation</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">High impact</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Automation Testing Generation</div><div class="uc-dept">R&amp;D</div><div class="uc-stat">High impact</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">AI-assist Program Management</div><div class="uc-dept">PMO</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">CTQ Ballooning</div><div class="uc-desc">Automates balloon annotations on engineering drawings from CAD data</div></div><div class="uc-dept">R&amp;D · Hannah Klinger</div><div class="uc-stat">2h/drawing</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">AI-assisted Design Check in CAD</div><div class="uc-desc">Validates design against rules and standards before review</div></div><div class="uc-dept">R&amp;D · Toby Lu</div><div class="uc-stat">2h/drawing</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">AI-assisted Drawing Generation</div><div class="uc-desc">Generates full engineering drawings from 3D model and design intent</div></div><div class="uc-dept">R&amp;D · Toby Lu</div><div class="uc-stat">4h/drawing</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">AI-assisted Early Concept Generation in CAD</div><div class="uc-desc">Creates initial 3D concept models from product requirements</div></div><div class="uc-dept">R&amp;D · Toby Lu</div><div class="uc-stat">6h/model</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">AI Knowledge Search Agent</div><div class="uc-desc">Finds relevant engineering knowledge across internal documents and specs</div></div><div class="uc-dept">R&amp;D · Talal El Chaar</div><div class="uc-stat">10% gain</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">Standard Part Selector (Electrical Components)</div><div class="uc-desc">Recommends optimal components by matching specs, cost, and obsolescence data</div></div><div class="uc-dept">R&amp;D · Bernhard Wagner</div><div class="uc-stat">Acceleration</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">Value &amp; Cost Engineering Agents</div><div class="uc-desc">Automates target costing and cost bridge analysis across design phases</div></div><div class="uc-dept">R&amp;D + I&amp;D · Henning</div><div class="uc-stat">Cost ctrl</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">PD Lighthouse — SW Dev Lifecycle Acceleration</div><div class="uc-desc">AI-powered infrastructure across the full software development lifecycle</div></div><div class="uc-dept">R&amp;D</div><div class="uc-stat">20% TTM↓</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Literature Mapping (PubMed/Scholar → Clinical Claims)</div><div class="uc-desc">Continuously maps new publications to existing clinical product claims</div></div><div class="uc-dept">Clinical</div><div class="uc-stat">Proposed</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Literature Review for CER and PMCF</div><div class="uc-desc">AI-assisted analysis and substantiation for regulatory clinical evidence files</div></div><div class="uc-dept">Clinical Affairs</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Product Configuration History Review</div><div class="uc-desc">Simplifies product catalog by analyzing historical configuration patterns</div></div><div class="uc-dept">Product Mgmt</div><div class="uc-stat">Proposed</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">AI Software Development</div><div class="uc-desc">AI-assisted code generation, review, and documentation for R&amp;D engineers</div></div><div class="uc-dept">R&amp;D</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">DHF Automation</div><div class="uc-desc">Auto-generates Design History File entries from project and design data</div></div><div class="uc-dept">R&amp;D</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Automation Testing Generation</div><div class="uc-desc">Generates test scripts and cases automatically from product requirements</div></div><div class="uc-dept">R&amp;D</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">AI-assist Program Management</div><div class="uc-desc">AI for project planning, status analysis, and meeting summaries</div></div><div class="uc-dept">PMO</div><div class="uc-stat">High impact</div></div>
         </div>
 
         <div class="pillar">Customer Engagement &amp; Commercial Excellence</div>
         <div class="uc-list">
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Customer Alert + Root Cause Investigation</div><div class="uc-dept">Quality · Yaara</div><div class="uc-stat">Cost avoid</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Win-Loss Analysis &amp; Sales Insights (SFDC)</div><div class="uc-dept">Commercial Excellence</div><div class="uc-stat">Transformative</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Competitive Intelligence Agent (MI&amp;A)</div><div class="uc-dept">Marketing</div><div class="uc-stat">Faster insights</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Marketing Content &amp; Communications (Video, Images)</div><div class="uc-dept">Marketing</div><div class="uc-stat">Proposed</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">Customer Alert + Root Cause Investigation</div><div class="uc-desc">Identifies customer field issues, traces root cause, and proposes resolution path</div></div><div class="uc-dept">Quality · Yaara</div><div class="uc-stat">Cost avoid</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Win-Loss Analysis &amp; Sales Insights (SFDC)</div><div class="uc-desc">Extracts win/loss patterns from Salesforce to improve messaging and win rates</div></div><div class="uc-dept">Commercial Excellence</div><div class="uc-stat">Transformative</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Competitive Intelligence Agent (MI&amp;A)</div><div class="uc-desc">Monitors competitor activity from public and internal sources, surfaces insights</div></div><div class="uc-dept">Marketing</div><div class="uc-stat">Faster insights</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Marketing Content &amp; Communications (Video, Images)</div><div class="uc-desc">AI-generated product videos, images, and marketing materials</div></div><div class="uc-dept">Marketing</div><div class="uc-stat">Proposed</div></div>
         </div>
 
         <div class="pillar">Operational Excellence &amp; Automation</div>
         <div class="uc-list">
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Windchill PLM AI Agent</div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">5-8h/wk</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">QMS Harmonization</div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">70% faster</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">TMV Gap Assessment Agent</div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">80% faster</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">EHS Interactive Training</div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">24/7 access</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Global Costing AI Agent</div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">60-70%↑</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Regulatory AI Agents</div><div class="uc-dept">RA · Veronica Padharia</div><div class="uc-stat">Refinement</div></div>
-          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-name">Horizontal Complaint Analysis (IIA/CAPA)</div><div class="uc-dept">Quality · Or Green</div><div class="uc-stat">30h/IIA</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">DHF &amp; Reliability Establishment</div><div class="uc-dept">QA</div><div class="uc-stat">High impact</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Ad-promo / Marketing Claims Review</div><div class="uc-dept">Legal</div><div class="uc-stat">High impact</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">APQP/PV Records Auto-Check</div><div class="uc-dept">SQE</div><div class="uc-stat">Better quality</div></div>
-          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-name">Supplier Contract Drafting &amp; Review</div><div class="uc-dept">Procurement</div><div class="uc-stat">Faster cycles</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">Windchill PLM AI Agent</div><div class="uc-desc">Natural-language control over PLM tasks — BOMs, ECNs, parts, and lifecycle</div></div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">5-8h/wk</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">QMS Harmonization</div><div class="uc-desc">Finds semantic gaps and drafts harmonized quality documents across sites</div></div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">70% faster</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">TMV Gap Assessment Agent</div><div class="uc-desc">Reads GR&amp;R measurement data and auto-completes validation forms for QA review</div></div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">80% faster</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">EHS Interactive Training</div><div class="uc-desc">On-demand safety scenarios built from real incident data, personalized per employee</div></div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">24/7 access</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">Global Costing AI Agent</div><div class="uc-desc">Drafts cost estimates from BOMs and supplier pricing for engineer review</div></div><div class="uc-dept">ISC · Roee Lahav</div><div class="uc-stat">60-70%↑</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">Regulatory AI Agents</div><div class="uc-desc">Reviews submission docs, flags evidence gaps, and monitors new regulatory standards</div></div><div class="uc-dept">RA · Veronica Padharia</div><div class="uc-stat">Refinement</div></div>
+          <div class="uc-row"><div class="uc-dot active"></div><div class="uc-info"><div class="uc-name">Horizontal Complaint Analysis (IIA/CAPA)</div><div class="uc-desc">AI collects and validates complaint data for investigation — 30h saved per IIA</div></div><div class="uc-dept">Quality · Or Green</div><div class="uc-stat">30h/IIA</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">DHF &amp; Reliability Establishment</div><div class="uc-desc">AI-assisted creation of Design History File and reliability documentation</div></div><div class="uc-dept">QA</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Ad-promo / Marketing Claims Review</div><div class="uc-desc">Legal review of promotional content against approved claims library</div></div><div class="uc-dept">Legal</div><div class="uc-stat">High impact</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">APQP/PV Records Auto-Check</div><div class="uc-desc">Auto-validates supplier quality records during APQP process, SQE confirms</div></div><div class="uc-dept">SQE</div><div class="uc-stat">Better quality</div></div>
+          <div class="uc-row"><div class="uc-dot progress"></div><div class="uc-info"><div class="uc-name">Supplier Contract Drafting &amp; Review</div><div class="uc-desc">AI drafts and reviews supplier agreements, legal and procurement verify outcomes</div></div><div class="uc-dept">Procurement</div><div class="uc-stat">Faster cycles</div></div>
         </div>
 
         <div style="font-size:11px;color:var(--text-3);margin-top:14px;padding:10px 14px;background:var(--surface-dim);border-radius:10px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
